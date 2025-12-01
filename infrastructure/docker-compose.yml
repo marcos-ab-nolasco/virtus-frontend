@@ -1,14 +1,14 @@
 networks:
-  frontend-network:
+  virtus_network:
     driver: bridge
 
 services:
-  frontend:
+  virtus-frontend:
     build:
       context: ..
       dockerfile: infrastructure/docker/Dockerfile.frontend
-    image: frontend-app:${COMPOSE_FRONTEND_VERSION:-latest}
-    container_name: frontend-app
+    image: virtus-frontend:${COMPOSE_FRONTEND_VERSION:-latest}
+    container_name: virtus-frontend
     pull_policy: never
     restart: always
     mem_limit: 5G
@@ -24,4 +24,4 @@ services:
     ports:
       - ${COMPOSE_FRONTEND_PORTS:-3000}:3000
     networks:
-      - frontend-network
+      - virtus_network

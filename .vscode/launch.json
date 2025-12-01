@@ -7,9 +7,17 @@
       "request": "launch",
       "cwd": "${workspaceFolder}/app/frontend",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["run", "dev", "--", "--inspect"],
+      "runtimeArgs": ["run", "dev"],
+      "env": {
+        "NODE_OPTIONS": "--inspect"
+      },
       "console": "integratedTerminal",
-      "skipFiles": ["<node_internals>/**"]
+      "skipFiles": ["<node_internals>/**"],
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "started server on .*, url: (https?://\\S+)",
+        "uriFormat": "%s"
+      }
     }
   ]
 }
