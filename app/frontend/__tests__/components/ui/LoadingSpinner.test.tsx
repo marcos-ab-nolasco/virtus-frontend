@@ -40,9 +40,7 @@ describe("LoadingSpinner", () => {
   });
 
   it("applies custom className", () => {
-    const { container } = render(
-      <LoadingSpinner className="custom-class" />
-    );
+    const { container } = render(<LoadingSpinner className="custom-class" />);
     const wrapper = container.firstChild;
     expect(wrapper).toHaveClass("custom-class");
   });
