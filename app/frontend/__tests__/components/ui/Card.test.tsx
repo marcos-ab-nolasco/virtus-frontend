@@ -10,37 +10,37 @@ describe('Card', () => {
 
   it('applies small padding variant', () => {
     render(<Card padding="sm">Small padding</Card>);
-    const card = screen.getByText(/small padding/i).parentElement;
+    const card = screen.getByText(/small padding/i);
     expect(card).toHaveClass('p-3');
   });
 
   it('applies medium padding variant', () => {
     render(<Card padding="md">Medium padding</Card>);
-    const card = screen.getByText(/medium padding/i).parentElement;
+    const card = screen.getByText(/medium padding/i);
     expect(card).toHaveClass('p-4');
   });
 
   it('applies large padding variant', () => {
     render(<Card padding="lg">Large padding</Card>);
-    const card = screen.getByText(/large padding/i).parentElement;
+    const card = screen.getByText(/large padding/i);
     expect(card).toHaveClass('p-6');
   });
 
   it('applies shadow when shadow prop is true', () => {
     render(<Card shadow>Shadowed card</Card>);
-    const card = screen.getByText(/shadowed card/i).parentElement;
+    const card = screen.getByText(/shadowed card/i);
     expect(card).toHaveClass('shadow-md');
   });
 
   it('does not apply shadow when shadow prop is false', () => {
     render(<Card shadow={false}>No shadow</Card>);
-    const card = screen.getByText(/no shadow/i).parentElement;
+    const card = screen.getByText(/no shadow/i);
     expect(card).not.toHaveClass('shadow-md');
   });
 
   it('applies custom className', () => {
     render(<Card className="custom-card">Custom</Card>);
-    const card = screen.getByText(/custom/i).parentElement;
+    const card = screen.getByText(/custom/i);
     expect(card).toHaveClass('custom-card');
   });
 });

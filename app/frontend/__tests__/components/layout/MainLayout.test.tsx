@@ -1,10 +1,18 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import MainLayout from '@/components/layout/MainLayout';
 
-// Mock usePathname from next/navigation
+// Mock next/navigation and auth hook
 vi.mock('next/navigation', () => ({
   usePathname: () => '/dashboard',
+  useRouter: () => ({ push: vi.fn() }),
+}));
+
+vi.mock('@/hooks/useAuth', () => ({
+  useAuth: () => ({
+    user: { id: '1', email: 'test@example.com', full_name: 'Test User' },
+    logout: vi.fn().mockResolvedValue(undefined),
+  }),
 }));
 
 describe('MainLayout', () => {

@@ -46,7 +46,9 @@ describe("ErrorBoundary", () => {
   });
 
   it("displays error details in development mode", () => {
-    // NODE_ENV is set to test by default, which shows dev details
+    const originalEnv = process.env.NODE_ENV;
+    process.env.NODE_ENV = "development";
+
     render(
       <ErrorBoundary>
         <ThrowError message="Custom error message" />
@@ -55,6 +57,8 @@ describe("ErrorBoundary", () => {
 
     // In development/test mode, error details should be visible
     expect(screen.getByText("Detalhes do erro (apenas em desenvolvimento)")).toBeInTheDocument();
+
+    process.env.NODE_ENV = originalEnv;
   });
 
   it("shows action buttons", () => {

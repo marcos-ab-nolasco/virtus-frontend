@@ -1,8 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { initiateGoogleOAuth, checkOAuthStatus, disconnectOAuth } from '@/lib/api/oauth';
-import * as apiClient from '@/lib/api-client';
+import { apiClient } from '@/lib/api-client';
 
-vi.mock('@/lib/api-client');
+vi.mock('@/lib/api-client', () => ({
+  apiClient: {
+    GET: vi.fn(),
+    DELETE: vi.fn(),
+  },
+}));
 
 describe('OAuth API', () => {
   beforeEach(() => {
@@ -16,9 +21,7 @@ describe('OAuth API', () => {
         response: {} as Response,
       };
 
-      vi.spyOn(apiClient, 'apiClient').mockReturnValue({
-        GET: vi.fn().mockResolvedValue(mockResponse),
-      } as any);
+      vi.mocked(apiClient.GET).mockResolvedValue(mockResponse as any);
 
       const url = await initiateGoogleOAuth();
 
@@ -26,9 +29,7 @@ describe('OAuth API', () => {
     });
 
     it('throws error when request fails', async () => {
-      vi.spyOn(apiClient, 'apiClient').mockReturnValue({
-        GET: vi.fn().mockRejectedValue(new Error('Network error')),
-      } as any);
+      vi.mocked(apiClient.GET).mockRejectedValue(new Error('Network error'));
 
       await expect(initiateGoogleOAuth()).rejects.toThrow('Network error');
     });
@@ -50,9 +51,7 @@ describe('OAuth API', () => {
         response: {} as Response,
       };
 
-      vi.spyOn(apiClient, 'apiClient').mockReturnValue({
-        GET: vi.fn().mockResolvedValue(mockResponse),
-      } as any);
+      vi.mocked(apiClient.GET).mockResolvedValue(mockResponse as any);
 
       const connections = await checkOAuthStatus();
 
@@ -62,15 +61,11 @@ describe('OAuth API', () => {
 
   describe('disconnectOAuth', () => {
     it('calls delete endpoint with provider', async () => {
-      const mockDelete = vi.fn().mockResolvedValue({ data: undefined, response: {} as Response });
-
-      vi.spyOn(apiClient, 'apiClient').mockReturnValue({
-        DELETE: mockDelete,
-      } as any);
+      vi.mocked(apiClient.DELETE).mockResolvedValue({ data: undefined, response: {} as Response } as any);
 
       await disconnectOAuth('google');
 
-      expect(mockDelete).toHaveBeenCalledWith('/api/v1/integrations/{provider}', {
+      expect(apiClient.DELETE).toHaveBeenCalledWith('/api/v1/integrations/{provider}', {
         params: { path: { provider: 'google' } },
       });
     });

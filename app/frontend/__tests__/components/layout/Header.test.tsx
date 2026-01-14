@@ -7,7 +7,7 @@ describe('Header', () => {
   const mockUser = {
     id: '1',
     email: 'test@example.com',
-    fullName: 'Test User',
+    full_name: 'Test User',
   };
 
   it('renders logo', () => {

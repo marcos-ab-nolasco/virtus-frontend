@@ -66,7 +66,7 @@ describe('QuickReplies', () => {
   it('renders empty state when no options provided', () => {
     const { container } = render(<QuickReplies options={[]} onSelect={vi.fn()} />);
 
-    expect(container.firstChild).toBeEmptyDOMElement();
+    expect(container.firstChild).toBeNull();
   });
 
   it('supports horizontal scrolling on mobile', () => {
