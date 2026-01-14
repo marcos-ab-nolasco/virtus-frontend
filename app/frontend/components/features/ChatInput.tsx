@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState, KeyboardEvent, ChangeEvent, useEffect, useRef } from 'react';
-import { Send } from 'lucide-react';
-import Button from '@/components/ui/Button';
+import { useState, KeyboardEvent, ChangeEvent, useEffect, useRef } from "react";
+import { Send } from "lucide-react";
+import Button from "@/components/ui/Button";
 
 interface ChatInputProps {
   onSend: (message: string) => void;
@@ -13,15 +13,15 @@ interface ChatInputProps {
 export default function ChatInput({
   onSend,
   disabled = false,
-  placeholder = 'Digite sua mensagem...',
+  placeholder = "Digite sua mensagem...",
 }: ChatInputProps) {
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   // Auto-grow textarea
   useEffect(() => {
     if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = "auto";
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
   }, [message]);
@@ -30,12 +30,12 @@ export default function ChatInput({
     const trimmedMessage = message.trim();
     if (trimmedMessage && !disabled) {
       onSend(trimmedMessage);
-      setMessage('');
+      setMessage("");
     }
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSend();
     }

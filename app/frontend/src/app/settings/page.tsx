@@ -1,21 +1,21 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '@/hooks/useAuth';
-import { useOAuth } from '@/hooks/useOAuth';
-import MainLayout from '@/components/layout/MainLayout';
-import ConnectionStatus from '@/components/features/ConnectionStatus';
-import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
+import { useOAuth } from "@/hooks/useOAuth";
+import MainLayout from "@/components/layout/MainLayout";
+import ConnectionStatus from "@/components/features/ConnectionStatus";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 
 export default function SettingsPage() {
   const { isAuthenticated, isLoading: authLoading } = useAuth();
-  const { connections, isLoading, fetchConnections, initiateOAuth, disconnect } = useOAuth();
+  const { connections, isLoading, fetchConnections, disconnect } = useOAuth();
   const router = useRouter();
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
-      router.push('/login');
+      router.push("/login");
     }
   }, [isAuthenticated, authLoading, router]);
 
@@ -26,7 +26,7 @@ export default function SettingsPage() {
   }, [isAuthenticated, fetchConnections]);
 
   const handleConnect = () => {
-    router.push('/connect-calendar');
+    router.push("/connect-calendar");
   };
 
   const handleDisconnect = async (provider: string) => {
@@ -62,14 +62,22 @@ export default function SettingsPage() {
               <div className="space-y-4">
                 {/* Google Calendar */}
                 {(() => {
-                  const googleConnection = connections.find(c => c.provider === 'GOOGLE');
+                  const googleConnection = connections.find(
+                    (connection) => connection.provider === "GOOGLE_CALENDAR"
+                  );
+                  const isConnected = googleConnection?.status === "ACTIVE";
                   return (
                     <ConnectionStatus
-                      provider="GOOGLE"
-                      connected={googleConnection?.connected || false}
-                      lastSync={googleConnection?.last_sync}
+                      provider="GOOGLE_CALENDAR"
+                      connected={isConnected}
+                      lastSync={googleConnection?.last_sync_at ?? undefined}
                       onConnect={handleConnect}
-                      onDisconnect={() => handleDisconnect('google')}
+                      onDisconnect={() => {
+                        if (!googleConnection) {
+                          return;
+                        }
+                        void handleDisconnect(googleConnection.id);
+                      }}
                     />
                   );
                 })()}
@@ -87,9 +95,7 @@ export default function SettingsPage() {
           {/* Account Section */}
           <section>
             <h2 className="text-xl font-semibold text-neutral-900 mb-4">Conta</h2>
-            <p className="text-neutral-600">
-              Configurações de conta estarão disponíveis em breve.
-            </p>
+            <p className="text-neutral-600">Configurações de conta estarão disponíveis em breve.</p>
           </section>
         </div>
       </div>

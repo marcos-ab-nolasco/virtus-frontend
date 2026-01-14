@@ -1,10 +1,11 @@
-import { Calendar } from 'lucide-react';
-import Card from '@/components/ui/Card';
-import Badge from '@/components/ui/Badge';
-import Button from '@/components/ui/Button';
+import { Calendar } from "lucide-react";
+import Card from "@/components/ui/Card";
+import Badge from "@/components/ui/Badge";
+import Button from "@/components/ui/Button";
+import type { components } from "@/types/api";
 
 interface ConnectionStatusProps {
-  provider: 'GOOGLE' | 'OUTLOOK';
+  provider: components["schemas"]["CalendarProvider"];
   connected: boolean;
   lastSync?: string;
   onConnect: () => void;
@@ -12,13 +13,17 @@ interface ConnectionStatusProps {
 }
 
 const providerInfo = {
-  GOOGLE: {
-    name: 'Google Calendar',
+  GOOGLE_CALENDAR: {
+    name: "Google Calendar",
     icon: <Calendar className="w-6 h-6 text-primary-600" />,
   },
   OUTLOOK: {
-    name: 'Outlook Calendar',
+    name: "Outlook Calendar",
     icon: <Calendar className="w-6 h-6 text-blue-600" />,
+  },
+  APPLE_CALENDAR: {
+    name: "Apple Calendar",
+    icon: <Calendar className="w-6 h-6 text-neutral-600" />,
   },
 };
 
@@ -28,16 +33,16 @@ function formatLastSync(timestamp: string): string {
   const diffInMs = now.getTime() - date.getTime();
   const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
 
-  if (diffInMinutes < 1) return 'agora mesmo';
-  if (diffInMinutes === 1) return '1 minuto atrás';
+  if (diffInMinutes < 1) return "agora mesmo";
+  if (diffInMinutes === 1) return "1 minuto atrás";
   if (diffInMinutes < 60) return `${diffInMinutes} minutos atrás`;
 
   const diffInHours = Math.floor(diffInMinutes / 60);
-  if (diffInHours === 1) return '1 hora atrás';
+  if (diffInHours === 1) return "1 hora atrás";
   if (diffInHours < 24) return `${diffInHours} horas atrás`;
 
   const diffInDays = Math.floor(diffInHours / 24);
-  if (diffInDays === 1) return '1 dia atrás';
+  if (diffInDays === 1) return "1 dia atrás";
   return `${diffInDays} dias atrás`;
 }
 
@@ -67,12 +72,10 @@ export default function ConnectionStatus({
             {info.icon}
           </div>
           <div className="flex-1">
-            <h3 className="text-lg font-semibold text-neutral-900 mb-1">
-              {info.name}
-            </h3>
+            <h3 className="text-lg font-semibold text-neutral-900 mb-1">{info.name}</h3>
             <div className="flex items-center gap-2 mb-2">
-              <Badge variant={connected ? 'success' : 'neutral'}>
-                {connected ? 'Conectado' : 'Desconectado'}
+              <Badge variant={connected ? "success" : "neutral"}>
+                {connected ? "Conectado" : "Desconectado"}
               </Badge>
             </div>
             {connected && lastSync && (
@@ -84,19 +87,11 @@ export default function ConnectionStatus({
         </div>
         <div>
           {connected ? (
-            <Button
-              variant="danger"
-              size="sm"
-              onClick={handleDisconnect}
-            >
+            <Button variant="danger" size="sm" onClick={handleDisconnect}>
               Desconectar
             </Button>
           ) : (
-            <Button
-              variant="primary"
-              size="sm"
-              onClick={onConnect}
-            >
+            <Button variant="primary" size="sm" onClick={onConnect}>
               Conectar
             </Button>
           )}

@@ -46,8 +46,7 @@ describe("ErrorBoundary", () => {
   });
 
   it("displays error details in development mode", () => {
-    const originalEnv = process.env.NODE_ENV;
-    process.env.NODE_ENV = "development";
+    vi.stubEnv("NODE_ENV", "development");
 
     render(
       <ErrorBoundary>
@@ -58,7 +57,7 @@ describe("ErrorBoundary", () => {
     // In development/test mode, error details should be visible
     expect(screen.getByText("Detalhes do erro (apenas em desenvolvimento)")).toBeInTheDocument();
 
-    process.env.NODE_ENV = originalEnv;
+    vi.unstubAllEnvs();
   });
 
   it("shows action buttons", () => {

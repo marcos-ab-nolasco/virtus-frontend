@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { ReactNode, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Header from './Header';
-import Sidebar from './Sidebar';
-import MobileNav from './MobileNav';
-import { useAuth } from '@/hooks/useAuth';
+import { ReactNode, useState } from "react";
+import { useRouter } from "next/navigation";
+import Header from "./Header";
+import Sidebar from "./Sidebar";
+import MobileNav from "./MobileNav";
+import { useAuth } from "@/hooks/useAuth";
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -19,7 +19,7 @@ export default function MainLayout({ children, showSidebar = true }: MainLayoutP
 
   const handleLogout = async () => {
     await logout();
-    router.push('/login');
+    router.push("/login");
   };
 
   const toggleMobileSidebar = () => {
@@ -64,9 +64,7 @@ export default function MainLayout({ children, showSidebar = true }: MainLayoutP
 
         {/* Main content */}
         <main className="flex-1 overflow-y-auto pb-16 lg:pb-0">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            {children}
-          </div>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">{children}</div>
         </main>
       </div>
 

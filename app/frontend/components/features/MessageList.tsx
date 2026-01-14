@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useEffect, useRef } from 'react';
-import ChatBubble from './ChatBubble';
+import { useEffect, useRef } from "react";
+import ChatBubble from "./ChatBubble";
 
 interface Message {
   id: string;
   message: string;
-  role: 'user' | 'agent';
+  role: "user" | "agent";
   timestamp: string;
 }
 
@@ -19,7 +19,7 @@ export default function MessageList({ messages, isAgentTyping = false }: Message
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
@@ -37,13 +37,7 @@ export default function MessageList({ messages, isAgentTyping = false }: Message
             timestamp={msg.timestamp}
           />
         ))}
-        {isAgentTyping && (
-          <ChatBubble
-            message=""
-            role="agent"
-            isLoading={true}
-          />
-        )}
+        {isAgentTyping && <ChatBubble message="" role="agent" isLoading={true} />}
       </div>
       <div ref={messagesEndRef} />
     </div>

@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { Home, MessageSquare, Calendar, Settings } from 'lucide-react';
-import { twMerge } from 'tailwind-merge';
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Home, MessageSquare, Calendar, Settings } from "lucide-react";
+import { twMerge } from "tailwind-merge";
 
 interface NavItem {
   label: string;
@@ -13,23 +13,23 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   {
-    label: 'Início',
-    href: '/dashboard',
+    label: "Início",
+    href: "/dashboard",
     icon: <Home className="w-6 h-6" />,
   },
   {
-    label: 'Chat',
-    href: '/dashboard/chat',
+    label: "Chat",
+    href: "/dashboard/chat",
     icon: <MessageSquare className="w-6 h-6" />,
   },
   {
-    label: 'Planos',
-    href: '/dashboard/plans',
+    label: "Planos",
+    href: "/dashboard/plans",
     icon: <Calendar className="w-6 h-6" />,
   },
   {
-    label: 'Configurações',
-    href: '/settings',
+    label: "Configurações",
+    href: "/settings",
     icon: <Settings className="w-6 h-6" />,
   },
 ];
@@ -38,8 +38,8 @@ export default function MobileNav() {
   const pathname = usePathname();
 
   const isActive = (href: string) => {
-    if (href === '/dashboard') {
-      return pathname === '/dashboard';
+    if (href === "/dashboard") {
+      return pathname === "/dashboard";
     }
     return pathname?.startsWith(href);
   };
@@ -57,10 +57,8 @@ export default function MobileNav() {
               key={item.href}
               href={item.href}
               className={twMerge(
-                'flex flex-col items-center justify-center gap-1 px-3 py-2 rounded-md transition-colors min-w-0 flex-1',
-                active
-                  ? 'text-primary-600'
-                  : 'text-neutral-600 hover:text-neutral-900'
+                "flex flex-col items-center justify-center gap-1 px-3 py-2 rounded-md transition-colors min-w-0 flex-1",
+                active ? "text-primary-600" : "text-neutral-600 hover:text-neutral-900"
               )}
             >
               {item.icon}

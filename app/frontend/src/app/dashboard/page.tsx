@@ -28,7 +28,9 @@ export default function DashboardPage() {
       <div className="space-y-6">
         {/* Welcome Card */}
         <Card>
-          <h2 className="text-2xl font-bold text-neutral-900 mb-4">Bem-vindo, {user?.full_name}!</h2>
+          <h2 className="text-2xl font-bold text-neutral-900 mb-4">
+            Bem-vindo, {user?.full_name}!
+          </h2>
           <div className="space-y-2 text-neutral-700">
             <p>
               <span className="font-semibold">Email:</span> {user?.email}
@@ -134,7 +136,9 @@ export default function DashboardPage() {
 
         {/* Info Banner */}
         <Card className="bg-primary-50 border-primary-200">
-          <h3 className="text-lg font-semibold text-primary-900 mb-2">🎉 Autenticação funcionando!</h3>
+          <h3 className="text-lg font-semibold text-primary-900 mb-2">
+            🎉 Autenticação funcionando!
+          </h3>
           <p className="text-primary-800">
             Você está autenticado e visualizando uma rota protegida. O token JWT está sendo
             armazenado no localStorage e injetado automaticamente em todas as requisições.

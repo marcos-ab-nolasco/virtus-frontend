@@ -201,7 +201,7 @@ Componente de botão reutilizável com múltiplas variantes e tamanhos.
 import Button from "@/components/ui/Button";
 
 function MyComponent() {
-  return <Button onClick={() => alert('Clicou!')}>Clique aqui</Button>;
+  return <Button onClick={() => alert("Clicou!")}>Clique aqui</Button>;
 }
 ```
 
@@ -279,18 +279,15 @@ function MyForm() {
 ### Com React Hook Form
 
 ```tsx
-import { useForm } from 'react-hook-form';
+import { useForm } from "react-hook-form";
 
 function MyForm() {
-  const { register, formState: { errors } } = useForm();
+  const {
+    register,
+    formState: { errors },
+  } = useForm();
 
-  return (
-    <Input
-      label="Email"
-      {...register('email')}
-      error={errors.email?.message}
-    />
-  );
+  return <Input label="Email" {...register("email")} error={errors.email?.message} />;
 }
 ```
 

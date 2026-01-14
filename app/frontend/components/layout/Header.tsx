@@ -1,14 +1,10 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Menu, X } from 'lucide-react';
-import Button from '@/components/ui/Button';
+import { useState } from "react";
+import { Menu } from "lucide-react";
+import type { components } from "@/types/api";
 
-interface User {
-  id: string;
-  email: string;
-  full_name: string;
-}
+type User = components["schemas"]["UserRead"];
 
 interface HeaderProps {
   user: User;
@@ -18,6 +14,8 @@ interface HeaderProps {
 
 export default function Header({ user, onLogout, onToggleMobileMenu }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const fullName = user.full_name ?? "";
+  const userInitial = fullName.charAt(0).toUpperCase();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -59,13 +57,11 @@ export default function Header({ user, onLogout, onToggleMobileMenu }: HeaderPro
             >
               <div className="flex items-center gap-3">
                 <div className="hidden sm:block text-right">
-                  <p className="text-sm font-medium text-neutral-900">{user.full_name}</p>
+                  <p className="text-sm font-medium text-neutral-900">{fullName}</p>
                   <p className="text-xs text-neutral-500">{user.email}</p>
                 </div>
                 <div className="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center">
-                  <span className="text-sm font-medium text-primary-700">
-                    {user.full_name.charAt(0).toUpperCase()}
-                  </span>
+                  <span className="text-sm font-medium text-primary-700">{userInitial}</span>
                 </div>
               </div>
             </button>

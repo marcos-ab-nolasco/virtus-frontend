@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { Home, MessageSquare, Calendar, Settings } from 'lucide-react';
-import { twMerge } from 'tailwind-merge';
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Home, MessageSquare, Calendar, Settings } from "lucide-react";
+import { twMerge } from "tailwind-merge";
 
 interface NavItem {
   label: string;
@@ -13,23 +13,23 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   {
-    label: 'Início',
-    href: '/dashboard',
+    label: "Início",
+    href: "/dashboard",
     icon: <Home className="w-5 h-5" />,
   },
   {
-    label: 'Chat',
-    href: '/dashboard/chat',
+    label: "Chat",
+    href: "/dashboard/chat",
     icon: <MessageSquare className="w-5 h-5" />,
   },
   {
-    label: 'Planos',
-    href: '/dashboard/plans',
+    label: "Planos",
+    href: "/dashboard/plans",
     icon: <Calendar className="w-5 h-5" />,
   },
   {
-    label: 'Configurações',
-    href: '/settings',
+    label: "Configurações",
+    href: "/settings",
     icon: <Settings className="w-5 h-5" />,
   },
 ];
@@ -38,8 +38,8 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   const isActive = (href: string) => {
-    if (href === '/dashboard') {
-      return pathname === '/dashboard';
+    if (href === "/dashboard") {
+      return pathname === "/dashboard";
     }
     return pathname?.startsWith(href);
   };
@@ -57,10 +57,10 @@ export default function Sidebar() {
               key={item.href}
               href={item.href}
               className={twMerge(
-                'flex items-center gap-3 px-4 py-3 rounded-md transition-colors',
+                "flex items-center gap-3 px-4 py-3 rounded-md transition-colors",
                 active
-                  ? 'bg-primary-50 text-primary-700 font-medium'
-                  : 'text-neutral-700 hover:bg-neutral-50'
+                  ? "bg-primary-50 text-primary-700 font-medium"
+                  : "text-neutral-700 hover:bg-neutral-50"
               )}
             >
               {item.icon}

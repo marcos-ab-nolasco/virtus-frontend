@@ -1,21 +1,17 @@
-import { apiClient } from '@/lib/api-client';
+import { authenticatedClient, apiClient } from "@/lib/api-client";
+import type { components } from "@/types/api";
 
-export interface OAuthConnection {
-  id: string;
-  provider: string;
-  connected: boolean;
-  last_sync?: string;
-}
+export type OAuthConnection = components["schemas"]["CalendarIntegrationResponse"];
 
 /**
  * Initiate Google OAuth flow
  * @returns Authorization URL to redirect user to
  */
 export async function initiateGoogleOAuth(): Promise<string> {
-  const response = await apiClient.GET('/api/v1/auth/google');
+  const response = await apiClient.GET("/api/v1/auth/google");
 
   if (!response.data) {
-    throw new Error('Failed to initiate OAuth');
+    throw new Error("Failed to initiate OAuth");
   }
 
   return response.data.authorization_url;
@@ -26,21 +22,21 @@ export async function initiateGoogleOAuth(): Promise<string> {
  * @returns List of OAuth connections
  */
 export async function checkOAuthStatus(): Promise<OAuthConnection[]> {
-  const response = await apiClient.GET('/api/v1/integrations');
+  const response = await authenticatedClient.GET("/api/v1/me/calendar/integrations");
 
   if (!response.data) {
     return [];
   }
 
-  return response.data as OAuthConnection[];
+  return response.data;
 }
 
 /**
  * Disconnect OAuth integration
  * @param provider Provider to disconnect (e.g., 'google')
  */
-export async function disconnectOAuth(provider: string): Promise<void> {
-  await apiClient.DELETE('/api/v1/integrations/{provider}', {
-    params: { path: { provider } },
+export async function disconnectOAuth(integrationId: string): Promise<void> {
+  await authenticatedClient.DELETE("/api/v1/me/calendar/integrations/{integration_id}", {
+    params: { path: { integration_id: integrationId } },
   });
 }

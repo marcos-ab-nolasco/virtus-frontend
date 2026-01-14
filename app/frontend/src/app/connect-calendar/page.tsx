@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '@/hooks/useAuth';
-import { useOAuth } from '@/hooks/useOAuth';
-import MainLayout from '@/components/layout/MainLayout';
-import Card from '@/components/ui/Card';
-import Button from '@/components/ui/Button';
-import { Calendar, CheckCircle } from 'lucide-react';
-import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
+import { useOAuth } from "@/hooks/useOAuth";
+import MainLayout from "@/components/layout/MainLayout";
+import Card from "@/components/ui/Card";
+import Button from "@/components/ui/Button";
+import { Calendar, CheckCircle } from "lucide-react";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 
 export default function ConnectCalendarPage() {
   const { isAuthenticated, isLoading: authLoading } = useAuth();
@@ -17,13 +17,13 @@ export default function ConnectCalendarPage() {
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
-      router.push('/login');
+      router.push("/login");
     }
   }, [isAuthenticated, authLoading, router]);
 
   const handleConnect = async () => {
     clearError();
-    await initiateOAuth('google');
+    await initiateOAuth("google");
   };
 
   if (authLoading) {
@@ -45,9 +45,7 @@ export default function ConnectCalendarPage() {
               </div>
             </div>
 
-            <h1 className="text-3xl font-bold text-neutral-900 mb-4">
-              Conectar Google Calendar
-            </h1>
+            <h1 className="text-3xl font-bold text-neutral-900 mb-4">Conectar Google Calendar</h1>
 
             <p className="text-neutral-600 mb-8">
               Conecte sua conta do Google para que o Virtus possa acessar e gerenciar seus eventos
@@ -82,7 +80,7 @@ export default function ConnectCalendarPage() {
               <Button
                 variant="secondary"
                 size="lg"
-                onClick={() => router.push('/dashboard')}
+                onClick={() => router.push("/dashboard")}
                 disabled={isLoading}
               >
                 Voltar

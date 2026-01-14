@@ -5,6 +5,7 @@ Documentação visual dos tokens de design do sistema Virtus.
 ## Cores
 
 ### Primary (Azul)
+
 Utilizada para ações principais, links e elementos interativos importantes.
 
 - `primary-50` → `#eff6ff` - Muito clara
@@ -20,6 +21,7 @@ Utilizada para ações principais, links e elementos interativos importantes.
 - `primary-950` → `#172554` - Muito escura
 
 ### Secondary (Verde)
+
 Utilizada para indicadores de sucesso e ações secundárias.
 
 - `secondary-50` → `#f0fdf4`
@@ -34,6 +36,7 @@ Utilizada para indicadores de sucesso e ações secundárias.
 - `secondary-900` → `#14532d`
 
 ### Error (Vermelho)
+
 Utilizada para mensagens de erro, estados de falha e ações destrutivas.
 
 - `error-50` → `#fef2f2`
@@ -48,6 +51,7 @@ Utilizada para mensagens de erro, estados de falha e ações destrutivas.
 - `error-900` → `#7f1d1d`
 
 ### Warning (Amarelo/Laranja)
+
 Utilizada para avisos e alertas que requerem atenção.
 
 - `warning-50` → `#fffbeb`
@@ -62,6 +66,7 @@ Utilizada para avisos e alertas que requerem atenção.
 - `warning-900` → `#78350f`
 
 ### Neutral (Cinzas)
+
 Utilizada para textos, bordas, backgrounds e elementos neutros.
 
 - `neutral-50` → `#fafafa` - Background muito claro
@@ -81,6 +86,7 @@ Utilizada para textos, bordas, backgrounds e elementos neutros.
 Usando as fontes **Geist Sans** e **Geist Mono** configuradas no projeto.
 
 ### Tamanhos de Fonte (Tailwind defaults)
+
 - `text-xs` → 0.75rem (12px)
 - `text-sm` → 0.875rem (14px)
 - `text-base` → 1rem (16px)
@@ -91,6 +97,7 @@ Usando as fontes **Geist Sans** e **Geist Mono** configuradas no projeto.
 - `text-4xl` → 2.25rem (36px)
 
 ### Pesos de Fonte
+
 - `font-light` → 300
 - `font-normal` → 400
 - `font-medium` → 500
@@ -100,6 +107,7 @@ Usando as fontes **Geist Sans** e **Geist Mono** configuradas no projeto.
 ## Espaçamento
 
 Usando escala padrão do Tailwind (base: 0.25rem / 4px):
+
 - `spacing-1` → 0.25rem (4px)
 - `spacing-2` → 0.5rem (8px)
 - `spacing-3` → 0.75rem (12px)
@@ -129,29 +137,34 @@ Usando escala padrão do Tailwind (base: 0.25rem / 4px):
 ## Uso Recomendado
 
 ### Botões
+
 - **Primary Button:** `bg-primary-500 hover:bg-primary-700 text-white`
 - **Secondary Button:** `border-2 border-primary-500 text-primary-700 hover:bg-primary-50`
 - **Danger Button:** `bg-error-500 hover:bg-error-700 text-white`
 - **Ghost Button:** `text-primary-700 hover:bg-primary-50`
 
 ### Cards
+
 - **Background:** `bg-white`
 - **Border:** `border border-neutral-200`
 - **Shadow:** `shadow-md`
 - **Radius:** `rounded-lg`
 
 ### Inputs
+
 - **Default:** `border border-neutral-300 focus:border-primary-500 focus:ring-2 focus:ring-primary-200`
 - **Error:** `border-error-500 focus:border-error-600 focus:ring-error-200`
 - **Disabled:** `bg-neutral-100 text-neutral-500 cursor-not-allowed`
 
 ### Badges
+
 - **Success:** `bg-secondary-100 text-secondary-800`
 - **Error:** `bg-error-100 text-error-800`
 - **Warning:** `bg-warning-100 text-warning-800`
 - **Neutral:** `bg-neutral-100 text-neutral-800`
 
 ### Textos
+
 - **Heading:** `text-neutral-900 font-semibold`
 - **Body:** `text-neutral-700`
 - **Secondary:** `text-neutral-500`
@@ -160,12 +173,16 @@ Usando escala padrão do Tailwind (base: 0.25rem / 4px):
 ## Acessibilidade
 
 ### Contraste de Cores
+
 Todas as combinações de cores atendem aos padrões WCAG AA:
+
 - Texto escuro em background claro: mínimo `neutral-700` em `white`
 - Texto claro em background escuro: `white` em backgrounds `primary-600+`, `error-600+`, etc.
 
 ### Estados Interativos
+
 Sempre fornecer indicadores visuais para:
+
 - `:hover` - Mudança de cor ou sombra
 - `:focus` - Ring colorido (focus:ring-2)
 - `:active` - Cor mais escura
