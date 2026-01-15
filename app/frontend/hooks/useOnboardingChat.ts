@@ -38,6 +38,28 @@ export function useOnboardingChat(): UseOnboardingChatReturn {
   const [error, setError] = useState<string | null>(null);
   const [validationError, setValidationError] = useState<string | null>(null);
 
+  const updateStatus = useCallback(
+    async (shouldThrow: boolean): Promise<OnboardingStatusResponse | null> => {
+      try {
+        const response = await onboardingApi.getOnboardingStatus();
+
+        setStatus(response.status as OnboardingStatus);
+        setCurrentStep(response.current_step ?? null);
+        setProgressPercent(response.progress_percent);
+
+        return response;
+      } catch (err) {
+        const message = err instanceof Error ? err.message : "Failed to get status";
+        setError(message);
+        if (shouldThrow) {
+          throw err;
+        }
+        return null;
+      }
+    },
+    []
+  );
+
   const startOnboarding = useCallback(async () => {
     setIsLoading(true);
     setError(null);
@@ -61,7 +83,7 @@ export function useOnboardingChat(): UseOnboardingChatReturn {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [updateStatus]);
 
   const sendMessage = useCallback(async (content: string) => {
     setIsSending(true);
@@ -99,6 +121,8 @@ export function useOnboardingChat(): UseOnboardingChatReturn {
       if (response.validation_error) {
         setValidationError(response.validation_error);
       }
+
+      await updateStatus(false);
     } catch (err) {
       const message = err instanceof Error ? err.message : "Failed to send message";
       setError(message);
@@ -106,7 +130,7 @@ export function useOnboardingChat(): UseOnboardingChatReturn {
       setIsSending(false);
       setIsTyping(false);
     }
-  }, []);
+  }, [updateStatus]);
 
   const sendQuickReply = useCallback(async (label: string, value: string) => {
     setIsSending(true);
@@ -144,6 +168,8 @@ export function useOnboardingChat(): UseOnboardingChatReturn {
       if (response.validation_error) {
         setValidationError(response.validation_error);
       }
+
+      await updateStatus(false);
     } catch (err) {
       const message = err instanceof Error ? err.message : "Failed to send message";
       setError(message);
@@ -154,19 +180,12 @@ export function useOnboardingChat(): UseOnboardingChatReturn {
   }, []);
 
   const getStatus = useCallback(async () => {
-    try {
-      const response = await onboardingApi.getOnboardingStatus();
-
-      setStatus(response.status as OnboardingStatus);
-      setCurrentStep(response.current_step ?? null);
-      setProgressPercent(response.progress_percent);
-      return response;
-    } catch (err) {
-      const message = err instanceof Error ? err.message : "Failed to get status";
-      setError(message);
-      throw err;
+    const response = await updateStatus(true);
+    if (!response) {
+      throw new Error("Failed to get status");
     }
-  }, []);
+    return response;
+  }, [updateStatus]);
 
   const skipOnboarding = useCallback(async () => {
     setIsLoading(true);

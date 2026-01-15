@@ -118,6 +118,13 @@ describe("useOnboardingChat", () => {
 
       vi.mocked(onboardingApi.startOnboarding).mockResolvedValueOnce(mockStartResponse);
       vi.mocked(onboardingApi.sendOnboardingMessage).mockResolvedValueOnce(mockMessageResponse);
+      vi.mocked(onboardingApi.getOnboardingStatus).mockResolvedValueOnce({
+        status: "IN_PROGRESS",
+        current_step: "vision",
+        progress_percent: 60,
+        started_at: new Date().toISOString(),
+        completed_at: null,
+      });
 
       const { result } = renderHook(() => useOnboardingChat());
 
@@ -135,6 +142,8 @@ describe("useOnboardingChat", () => {
       expect(result.current.messages[1].content).toBe("Minha resposta");
       expect(result.current.messages[2].role).toBe("assistant");
       expect(result.current.messages[2].content).toBe("Obrigado por compartilhar!");
+      expect(onboardingApi.getOnboardingStatus).toHaveBeenCalled();
+      expect(result.current.progressPercent).toBe(60);
     });
 
     it("should set typing state while waiting for response", async () => {
@@ -220,6 +229,13 @@ describe("useOnboardingChat", () => {
       };
 
       vi.mocked(onboardingApi.sendOnboardingMessage).mockResolvedValueOnce(mockMessageResponse);
+      vi.mocked(onboardingApi.getOnboardingStatus).mockResolvedValueOnce({
+        status: "IN_PROGRESS",
+        current_step: "vision",
+        progress_percent: 20,
+        started_at: new Date().toISOString(),
+        completed_at: null,
+      });
 
       const { result } = renderHook(() => useOnboardingChat());
 
@@ -228,6 +244,8 @@ describe("useOnboardingChat", () => {
       });
 
       expect(onboardingApi.sendOnboardingMessage).toHaveBeenCalledWith("opcao_a");
+      expect(onboardingApi.getOnboardingStatus).toHaveBeenCalled();
+      expect(result.current.progressPercent).toBe(20);
       expect(result.current.messages[0].content).toBe("Opcao A");
     });
   });
