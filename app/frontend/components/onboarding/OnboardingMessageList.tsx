@@ -42,9 +42,21 @@ export function OnboardingMessageList({
       ))}
 
       {isTyping && (
-        <div className="flex justify-start">
-          <TypingIndicator />
-        </div>
+        <>
+          <div className="flex justify-start">
+            <div
+              data-testid="onboarding-response-skeleton"
+              className="max-w-[70%] px-4 py-3 rounded-2xl rounded-bl-sm bg-muted/60 animate-pulse-subtle"
+            >
+              <div className="h-3 w-32 rounded bg-muted-foreground/20 mb-2" />
+              <div className="h-3 w-48 rounded bg-muted-foreground/20 mb-2" />
+              <div className="h-3 w-24 rounded bg-muted-foreground/20" />
+            </div>
+          </div>
+          <div className="flex justify-start">
+            <TypingIndicator />
+          </div>
+        </>
       )}
 
       <div ref={bottomRef} />

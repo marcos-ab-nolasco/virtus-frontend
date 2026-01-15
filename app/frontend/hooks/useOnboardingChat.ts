@@ -85,52 +85,55 @@ export function useOnboardingChat(): UseOnboardingChatReturn {
     }
   }, [updateStatus]);
 
-  const sendMessage = useCallback(async (content: string) => {
-    setIsSending(true);
-    setIsTyping(true);
-    setError(null);
-    setValidationError(null);
+  const sendMessage = useCallback(
+    async (content: string) => {
+      setIsSending(true);
+      setIsTyping(true);
+      setError(null);
+      setValidationError(null);
 
-    // Add user message immediately
-    const userMessage: OnboardingMessage = {
-      id: `user-${Date.now()}`,
-      role: "user",
-      content,
-      timestamp: new Date().toISOString(),
-    };
-
-    setMessages((prev) => [...prev, userMessage]);
-
-    try {
-      const response = await onboardingApi.sendOnboardingMessage(content);
-
-      // Add assistant response
-      const assistantMessage: OnboardingMessage = {
-        id: `assistant-${Date.now()}`,
-        role: "assistant",
-        content: response.assistant_message,
+      // Add user message immediately
+      const userMessage: OnboardingMessage = {
+        id: `user-${Date.now()}`,
+        role: "user",
+        content,
         timestamp: new Date().toISOString(),
       };
 
-      setMessages((prev) => [...prev, assistantMessage]);
+      setMessages((prev) => [...prev, userMessage]);
 
-      if (response.next_step) {
-        setCurrentStep(response.next_step);
+      try {
+        const response = await onboardingApi.sendOnboardingMessage(content);
+
+        // Add assistant response
+        const assistantMessage: OnboardingMessage = {
+          id: `assistant-${Date.now()}`,
+          role: "assistant",
+          content: response.assistant_message,
+          timestamp: new Date().toISOString(),
+        };
+
+        setMessages((prev) => [...prev, assistantMessage]);
+
+        if (response.next_step) {
+          setCurrentStep(response.next_step);
+        }
+
+        if (response.validation_error) {
+          setValidationError(response.validation_error);
+        }
+
+        await updateStatus(false);
+      } catch (err) {
+        const message = err instanceof Error ? err.message : "Failed to send message";
+        setError(message);
+      } finally {
+        setIsSending(false);
+        setIsTyping(false);
       }
-
-      if (response.validation_error) {
-        setValidationError(response.validation_error);
-      }
-
-      await updateStatus(false);
-    } catch (err) {
-      const message = err instanceof Error ? err.message : "Failed to send message";
-      setError(message);
-    } finally {
-      setIsSending(false);
-      setIsTyping(false);
-    }
-  }, [updateStatus]);
+    },
+    [updateStatus]
+  );
 
   const sendQuickReply = useCallback(async (label: string, value: string) => {
     setIsSending(true);
