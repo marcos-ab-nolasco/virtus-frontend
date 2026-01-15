@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { useOnboardingChat } from "@/hooks/useOnboardingChat";
 import { ProgressIndicator } from "./ProgressIndicator";
 import { OnboardingMessageList } from "./OnboardingMessageList";
@@ -8,6 +9,7 @@ import { OnboardingComplete } from "./OnboardingComplete";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 
 export function OnboardingPage() {
+  const router = useRouter();
   const {
     messages,
     status,
@@ -26,6 +28,7 @@ export function OnboardingPage() {
 
   const [inputValue, setInputValue] = useState("");
   const [initializing, setInitializing] = useState(true);
+  const [isRedirecting, setIsRedirecting] = useState(false);
   const [initError, setInitError] = useState<string | null>(null);
 
   // Initialize onboarding
@@ -34,7 +37,12 @@ export function OnboardingPage() {
 
     const init = async () => {
       try {
-        await getStatus();
+        const response = await getStatus();
+        if (response.status === "COMPLETED") {
+          setIsRedirecting(true);
+          router.replace("/home");
+          return;
+        }
       } catch (err) {
         if (mounted) {
           const message = err instanceof Error ? err.message : "Erro ao carregar onboarding";
@@ -53,7 +61,7 @@ export function OnboardingPage() {
     return () => {
       mounted = false;
     };
-  }, [getStatus]);
+  }, [getStatus, router]);
 
   // Start onboarding when status is NOT_STARTED
   useEffect(() => {
@@ -103,7 +111,7 @@ export function OnboardingPage() {
   );
 
   // Loading state
-  if (initializing) {
+  if (initializing || isRedirecting) {
     return (
       <div
         className="flex items-center justify-center min-h-screen bg-background"
@@ -130,7 +138,7 @@ export function OnboardingPage() {
   }
 
   // Completion state
-  if (showCompletion) {
+  if (showCompletion && !isRedirecting) {
     return <OnboardingComplete />;
   }
 

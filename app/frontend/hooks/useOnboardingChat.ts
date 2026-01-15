@@ -1,6 +1,10 @@
 import { useState, useCallback } from "react";
 import * as onboardingApi from "@/lib/api/onboarding";
-import type { OnboardingMessage, OnboardingStatus } from "@/types/onboarding";
+import type {
+  OnboardingMessage,
+  OnboardingStatus,
+  OnboardingStatusResponse,
+} from "@/types/onboarding";
 
 interface UseOnboardingChatReturn {
   // State
@@ -18,7 +22,7 @@ interface UseOnboardingChatReturn {
   startOnboarding: () => Promise<void>;
   sendMessage: (content: string) => Promise<void>;
   sendQuickReply: (label: string, value: string) => Promise<void>;
-  getStatus: () => Promise<void>;
+  getStatus: () => Promise<OnboardingStatusResponse>;
   skipOnboarding: () => Promise<void>;
   clearError: () => void;
 }
@@ -156,6 +160,7 @@ export function useOnboardingChat(): UseOnboardingChatReturn {
       setStatus(response.status as OnboardingStatus);
       setCurrentStep(response.current_step ?? null);
       setProgressPercent(response.progress_percent);
+      return response;
     } catch (err) {
       const message = err instanceof Error ? err.message : "Failed to get status";
       setError(message);

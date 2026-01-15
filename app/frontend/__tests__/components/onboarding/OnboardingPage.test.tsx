@@ -5,10 +5,13 @@ import { OnboardingPage } from "@/components/onboarding/OnboardingPage";
 import * as onboardingApi from "@/lib/api/onboarding";
 
 vi.mock("@/lib/api/onboarding");
+
+const replaceMock = vi.fn();
+
 vi.mock("next/navigation", () => ({
   useRouter: () => ({
     push: vi.fn(),
-    replace: vi.fn(),
+    replace: replaceMock,
   }),
 }));
 
@@ -25,6 +28,24 @@ describe("OnboardingPage", () => {
     render(<OnboardingPage />);
 
     expect(screen.getByTestId("onboarding-loading")).toBeInTheDocument();
+  });
+
+  it("redirects to /home when status is COMPLETED", async () => {
+    vi.mocked(onboardingApi.getOnboardingStatus).mockResolvedValue({
+      status: "COMPLETED",
+      current_step: null,
+      progress_percent: 100,
+      started_at: new Date().toISOString(),
+      completed_at: new Date().toISOString(),
+    });
+
+    render(<OnboardingPage />);
+
+    await waitFor(() => {
+      expect(replaceMock).toHaveBeenCalledWith("/home");
+    });
+
+    expect(onboardingApi.startOnboarding).not.toHaveBeenCalled();
   });
 
   it("calls startOnboarding when status is NOT_STARTED", async () => {

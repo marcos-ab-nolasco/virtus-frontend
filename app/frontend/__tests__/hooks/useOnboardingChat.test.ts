@@ -247,7 +247,8 @@ describe("useOnboardingChat", () => {
       const { result } = renderHook(() => useOnboardingChat());
 
       await act(async () => {
-        await result.current.getStatus();
+        const status = await result.current.getStatus();
+        expect(status).toEqual(mockStatus);
       });
 
       expect(onboardingApi.getOnboardingStatus).toHaveBeenCalled();
@@ -269,7 +270,8 @@ describe("useOnboardingChat", () => {
       const { result } = renderHook(() => useOnboardingChat());
 
       await act(async () => {
-        await result.current.getStatus();
+        const status = await result.current.getStatus();
+        expect(status).toEqual(mockStatus);
       });
 
       expect(result.current.status).toBe("COMPLETED");
