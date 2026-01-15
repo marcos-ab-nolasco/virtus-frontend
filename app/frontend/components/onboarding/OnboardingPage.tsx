@@ -63,9 +63,9 @@ export function OnboardingPage() {
     };
   }, [getStatus, router]);
 
-  // Start onboarding when status is NOT_STARTED
+  // Start or resume onboarding when status is NOT_STARTED or IN_PROGRESS
   useEffect(() => {
-    if (!initializing && status === "NOT_STARTED" && !initError) {
+    if (!initializing && !initError && (status === "NOT_STARTED" || status === "IN_PROGRESS")) {
       startOnboarding();
     }
   }, [initializing, status, initError, startOnboarding]);

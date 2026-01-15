@@ -75,6 +75,33 @@ describe("OnboardingPage", () => {
     });
   });
 
+  it("calls startOnboarding when status is IN_PROGRESS", async () => {
+    vi.mocked(onboardingApi.getOnboardingStatus).mockResolvedValue({
+      status: "IN_PROGRESS",
+      current_step: "vision",
+      progress_percent: 40,
+      started_at: new Date().toISOString(),
+      completed_at: null,
+    });
+
+    vi.mocked(onboardingApi.startOnboarding).mockResolvedValue({
+      status: "IN_PROGRESS",
+      current_step: "vision",
+      message: "Continuando o onboarding...",
+      started_at: new Date().toISOString(),
+    });
+
+    render(<OnboardingPage />);
+
+    await waitFor(() => {
+      expect(onboardingApi.startOnboarding).toHaveBeenCalled();
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText("Continuando o onboarding...")).toBeInTheDocument();
+    });
+  });
+
   it("displays welcome message from startOnboarding response", async () => {
     vi.mocked(onboardingApi.getOnboardingStatus).mockResolvedValue({
       status: "NOT_STARTED",
