@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
 
 interface OnboardingCompleteProps {
   onContinue?: () => void;
@@ -9,7 +10,12 @@ interface OnboardingCompleteProps {
 
 export function OnboardingComplete({ onContinue }: OnboardingCompleteProps) {
   const router = useRouter();
+  const { refreshUser } = useAuth();
   const [countdown, setCountdown] = useState(5);
+
+  useEffect(() => {
+    void refreshUser().catch(() => undefined);
+  }, [refreshUser]);
 
   const handleContinue = useCallback(() => {
     if (onContinue) {

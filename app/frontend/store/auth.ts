@@ -19,6 +19,7 @@ interface AuthState {
   register: (email: string, password: string, fullName: string) => Promise<void>;
   logout: () => Promise<void>;
   refreshAuth: () => Promise<void>;
+  refreshUser: () => Promise<void>;
   initializeSession: () => Promise<void>;
   clearError: () => void;
 }
@@ -103,6 +104,18 @@ export const useAuthStore = create<AuthState>()(
         } catch (error) {
           // If refresh fails, logout
           await get().logout();
+          throw error;
+        }
+      },
+
+      refreshUser: async () => {
+        set({ isLoading: true, error: null });
+        try {
+          const user = await authApi.getCurrentUser();
+          set({ user, isAuthenticated: true, isLoading: false });
+        } catch (error) {
+          const message = error instanceof Error ? error.message : "Failed to refresh user";
+          set({ error: message, isLoading: false });
           throw error;
         }
       },
