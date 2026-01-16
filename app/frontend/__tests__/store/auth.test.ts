@@ -10,6 +10,8 @@ const defaultUser = {
   id: "user-123",
   email: "test@example.com",
   full_name: "Test User",
+  is_admin: false,
+  is_blocked: false,
   created_at: new Date().toISOString(),
   updated_at: new Date().toISOString(),
 };
