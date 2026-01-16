@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, MessageSquare, Calendar, Settings } from "lucide-react";
+import { Home, MessageSquare, Calendar, Settings, Shield } from "lucide-react";
 import { twMerge } from "tailwind-merge";
+import { useAuth } from "@/hooks/useAuth";
 
 interface NavItem {
   label: string;
@@ -11,31 +12,41 @@ interface NavItem {
   icon: React.ReactNode;
 }
 
-const navItems: NavItem[] = [
-  {
-    label: "Início",
-    href: "/dashboard",
-    icon: <Home className="w-6 h-6" />,
-  },
-  {
-    label: "Chat",
-    href: "/dashboard/chat",
-    icon: <MessageSquare className="w-6 h-6" />,
-  },
-  {
-    label: "Planos",
-    href: "/dashboard/plans",
-    icon: <Calendar className="w-6 h-6" />,
-  },
-  {
-    label: "Configurações",
-    href: "/settings",
-    icon: <Settings className="w-6 h-6" />,
-  },
-];
-
 export default function MobileNav() {
   const pathname = usePathname();
+  const { user } = useAuth();
+
+  const navItems: NavItem[] = [
+    {
+      label: "Início",
+      href: "/dashboard",
+      icon: <Home className="w-6 h-6" />,
+    },
+    {
+      label: "Chat",
+      href: "/dashboard/chat",
+      icon: <MessageSquare className="w-6 h-6" />,
+    },
+    {
+      label: "Planos",
+      href: "/dashboard/plans",
+      icon: <Calendar className="w-6 h-6" />,
+    },
+    {
+      label: "Configurações",
+      href: "/settings",
+      icon: <Settings className="w-6 h-6" />,
+    },
+    ...(user?.is_admin
+      ? [
+          {
+            label: "Admin",
+            href: "/admin",
+            icon: <Shield className="w-6 h-6" />,
+          },
+        ]
+      : []),
+  ];
 
   const isActive = (href: string) => {
     if (href === "/dashboard") {
