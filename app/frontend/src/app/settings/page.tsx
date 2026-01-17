@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { useOAuth } from "@/hooks/useOAuth";
@@ -15,6 +15,7 @@ export default function SettingsPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [toasts, setToasts] = useState<Array<{ id: string; message: string; type: ToastType }>>([]);
+  const handledOAuthRef = useRef<string | null>(null);
 
   const oauthStatus = searchParams.get("status");
   const oauthProvider = searchParams.get("provider");
@@ -61,7 +62,15 @@ export default function SettingsPage() {
       return;
     }
 
-  if (oauthStatus === "connected") {
+    const signature = `${oauthStatus}|${oauthProvider ?? ""}|${oauthReason ?? ""}|${
+      oauthIntegrationId ?? ""
+    }`;
+    if (handledOAuthRef.current === signature) {
+      return;
+    }
+    handledOAuthRef.current = signature;
+
+    if (oauthStatus === "connected") {
       addToast(`Integração com ${providerLabel} concluída com sucesso.`, "success");
       if (isAuthenticated) {
         fetchConnections();
