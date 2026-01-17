@@ -1,17 +1,48 @@
 "use client";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { useOAuth } from "@/hooks/useOAuth";
 import MainLayout from "@/components/layout/MainLayout";
 import ConnectionStatus from "@/components/features/ConnectionStatus";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
+import { ToastContainer, type ToastType } from "@/components/ui/Toast";
 
 export default function SettingsPage() {
   const { isAuthenticated, isLoading: authLoading } = useAuth();
   const { connections, isLoading, fetchConnections, disconnect } = useOAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const [toasts, setToasts] = useState<Array<{ id: string; message: string; type: ToastType }>>([]);
+
+  const oauthStatus = searchParams.get("status");
+  const oauthProvider = searchParams.get("provider");
+  const oauthReason = searchParams.get("reason");
+  const oauthIntegrationId = searchParams.get("integration_id");
+
+  const providerLabel = useMemo(() => {
+    if (!oauthProvider) {
+      return "integração";
+    }
+
+    if (oauthProvider.toLowerCase() === "google") {
+      return "Google Calendar";
+    }
+
+    return oauthProvider;
+  }, [oauthProvider]);
+
+  const addToast = useCallback((message: string, type: ToastType) => {
+    setToasts((prev) => [
+      ...prev,
+      { id: `${Date.now()}-${Math.random().toString(16).slice(2)}`, message, type },
+    ]);
+  }, []);
+
+  const removeToast = useCallback((id: string) => {
+    setToasts((prev) => prev.filter((toast) => toast.id !== id));
+  }, []);
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -24,6 +55,47 @@ export default function SettingsPage() {
       fetchConnections();
     }
   }, [isAuthenticated, fetchConnections]);
+
+  useEffect(() => {
+    if (!oauthStatus) {
+      return;
+    }
+
+  if (oauthStatus === "connected") {
+      addToast(`Integração com ${providerLabel} concluída com sucesso.`, "success");
+      if (isAuthenticated) {
+        fetchConnections();
+      }
+    } else if (oauthStatus === "failed") {
+      const reasonMap: Record<string, string> = {
+        invalid_state: "Sessão expirada, tente novamente.",
+        oauth_error: "Falha ao falar com o Google.",
+        internal_error: "Erro interno. Tente novamente.",
+        oauth_failed: "Não foi possível conectar.",
+        access_denied: "Conexão cancelada pelo usuário.",
+      };
+      const reasonText = oauthReason ? reasonMap[oauthReason] : undefined;
+      const message = reasonText
+        ? `Falha ao conectar ${providerLabel}: ${reasonText}`
+        : `Falha ao conectar ${providerLabel}.`;
+      addToast(message, "error");
+    }
+
+    if (oauthIntegrationId) {
+      // Reserved for future use; keep param parsed for potential UI updates.
+    }
+
+    router.replace("/settings");
+  }, [
+    addToast,
+    fetchConnections,
+    isAuthenticated,
+    oauthIntegrationId,
+    oauthReason,
+    oauthStatus,
+    providerLabel,
+    router,
+  ]);
 
   const handleConnect = () => {
     router.push("/connect-calendar");
@@ -99,6 +171,7 @@ export default function SettingsPage() {
           </section>
         </div>
       </div>
+      <ToastContainer toasts={toasts} onRemove={removeToast} />
     </MainLayout>
   );
 }
