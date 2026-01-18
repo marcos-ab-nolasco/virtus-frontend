@@ -191,6 +191,192 @@ Automaticamente se adapta aos breakpoints:
 
 ---
 
+## Button
+
+Componente de botão reutilizável com múltiplas variantes e tamanhos.
+
+### Uso Básico
+
+```tsx
+import Button from "@/components/ui/Button";
+
+function MyComponent() {
+  return <Button onClick={() => alert("Clicou!")}>Clique aqui</Button>;
+}
+```
+
+### Variantes
+
+```tsx
+// Primary (padrão) - Ação principal
+<Button variant="primary">Salvar</Button>
+
+// Secondary - Ação secundária
+<Button variant="secondary">Cancelar</Button>
+
+// Ghost - Ação terciária/discreta
+<Button variant="ghost">Ver detalhes</Button>
+
+// Danger - Ação destrutiva
+<Button variant="danger">Excluir</Button>
+```
+
+### Tamanhos
+
+```tsx
+<Button size="sm">Pequeno</Button>
+<Button size="md">Médio (padrão)</Button>
+<Button size="lg">Grande</Button>
+```
+
+### Estados
+
+```tsx
+// Desabilitado
+<Button disabled>Não pode clicar</Button>
+
+// Tipo submit em formulário
+<Button type="submit">Enviar</Button>
+```
+
+---
+
+## Input
+
+Componente de input com label, validação e mensagens de erro.
+
+### Uso Básico
+
+```tsx
+import Input from "@/components/ui/Input";
+
+function MyForm() {
+  return <Input label="Email" name="email" type="email" />;
+}
+```
+
+### Com Validação
+
+```tsx
+<Input
+  label="Senha"
+  name="password"
+  type="password"
+  error="Senha deve ter pelo menos 8 caracteres"
+  required
+/>
+```
+
+### Tipos Disponíveis
+
+```tsx
+<Input type="text" name="name" label="Nome" />
+<Input type="email" name="email" label="Email" />
+<Input type="password" name="password" label="Senha" />
+<Input type="number" name="age" label="Idade" />
+```
+
+### Com React Hook Form
+
+```tsx
+import { useForm } from "react-hook-form";
+
+function MyForm() {
+  const {
+    register,
+    formState: { errors },
+  } = useForm();
+
+  return <Input label="Email" {...register("email")} error={errors.email?.message} />;
+}
+```
+
+---
+
+## Card
+
+Componente de container para agrupar conteúdo relacionado.
+
+### Uso Básico
+
+```tsx
+import Card from "@/components/ui/Card";
+
+function MyComponent() {
+  return (
+    <Card>
+      <h3>Título do Card</h3>
+      <p>Conteúdo do card aqui.</p>
+    </Card>
+  );
+}
+```
+
+### Tamanhos de Padding
+
+```tsx
+<Card padding="sm">Padding pequeno</Card>
+<Card padding="md">Padding médio (padrão)</Card>
+<Card padding="lg">Padding grande</Card>
+```
+
+### Com/Sem Sombra
+
+```tsx
+<Card shadow>Com sombra (padrão)</Card>
+<Card shadow={false}>Sem sombra</Card>
+```
+
+---
+
+## Badge
+
+Componente de badge/pill para status e categorias.
+
+### Uso Básico
+
+```tsx
+import Badge from "@/components/ui/Badge";
+
+function MyComponent() {
+  return <Badge>Novo</Badge>;
+}
+```
+
+### Variantes
+
+```tsx
+<Badge variant="success">Conectado</Badge>
+<Badge variant="error">Erro</Badge>
+<Badge variant="warning">Atenção</Badge>
+<Badge variant="neutral">Inativo</Badge>
+```
+
+### Tamanhos
+
+```tsx
+<Badge size="sm">Pequeno</Badge>
+<Badge size="md">Médio (padrão)</Badge>
+```
+
+### Exemplo de Uso com Status
+
+```tsx
+function ConnectionStatus({ connected }) {
+  return (
+    <div>
+      {connected ? (
+        <Badge variant="success">Conectado</Badge>
+      ) : (
+        <Badge variant="neutral">Desconectado</Badge>
+      )}
+    </div>
+  );
+}
+```
+
+---
+
 ## Boas Práticas
 
 ### 1. Sempre use Skeleton para loading de dados
