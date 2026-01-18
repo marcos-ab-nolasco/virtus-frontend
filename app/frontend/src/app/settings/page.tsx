@@ -22,8 +22,9 @@ export default function SettingsPage() {
   const [toasts, setToasts] = useState<Array<{ id: string; message: string; type: ToastType }>>([]);
   const handledOAuthRef = useRef<string | null>(null);
   const [profile, setProfile] = useState<components["schemas"]["UserProfileResponse"] | null>(null);
-  const [preferences, setPreferences] =
-    useState<components["schemas"]["UserPreferencesResponse"] | null>(null);
+  const [preferences, setPreferences] = useState<
+    components["schemas"]["UserPreferencesResponse"] | null
+  >(null);
   const [isProfileLoading, setIsProfileLoading] = useState(false);
   const [profileError, setProfileError] = useState<string | null>(null);
 
@@ -148,6 +149,7 @@ export default function SettingsPage() {
     oauthIntegrationId,
     oauthReason,
     oauthStatus,
+    oauthProvider,
     providerLabel,
     router,
   ]);

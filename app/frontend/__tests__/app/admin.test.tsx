@@ -164,6 +164,10 @@ describe("AdminPage", () => {
       },
       isAuthenticated: true,
       isLoading: false,
+      onboardingStatus: "COMPLETED",
+      onboardingStatusError: null,
+      isOnboardingLoading: false,
+      refreshOnboardingStatus: vi.fn().mockResolvedValue("COMPLETED"),
       logout: vi.fn(),
     };
 
