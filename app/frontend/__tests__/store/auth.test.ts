@@ -122,6 +122,31 @@ describe("Auth Store", () => {
     });
   });
 
+  describe("refreshUser", () => {
+    it("refreshes user data", async () => {
+      useAuthStore.setState({ isAuthenticated: true });
+      vi.mocked(authApi.getCurrentUser).mockResolvedValueOnce(defaultUser);
+
+      await useAuthStore.getState().refreshUser();
+
+      const state = useAuthStore.getState();
+      expect(authApi.getCurrentUser).toHaveBeenCalled();
+      expect(state.user).toEqual(defaultUser);
+      expect(state.isAuthenticated).toBe(true);
+      expect(state.isLoading).toBe(false);
+    });
+
+    it("stores error when refreshUser fails", async () => {
+      vi.mocked(authApi.getCurrentUser).mockRejectedValueOnce(new Error("refresh failed"));
+
+      await expect(useAuthStore.getState().refreshUser()).rejects.toThrow("refresh failed");
+
+      const state = useAuthStore.getState();
+      expect(state.error).toBe("refresh failed");
+      expect(state.isLoading).toBe(false);
+    });
+  });
+
   describe("initializeSession", () => {
     it("hydrates state from refresh cookie", async () => {
       vi.mocked(authApi.refreshToken).mockResolvedValueOnce({

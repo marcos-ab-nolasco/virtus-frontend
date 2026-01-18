@@ -7,6 +7,7 @@ Frontend web do Virtus v3 (React SPA), pensado para validar agentes/skills com q
 - Base visual (M2): design system inicial, layout de navegacao e componentes de chat.
 - OAuth UI (M2): fluxo de conexao com Google Calendar e status de integracao.
 - Chat web basico para conversar com o agente e testar fluxos.
+- Onboarding UI (M3): interface conversacional de configuracao inicial com progress indicator, formularios inline, typing indicator e tela de conclusao.
 
 ## Como isso se conecta ao backend
 - O frontend consome a API REST autenticada (JWT) do backend.
@@ -33,4 +34,4 @@ Frontend web do Virtus v3 (React SPA), pensado para validar agentes/skills com q
 - `app/frontend/types`: tipos compartilhados
 
 ## Proximos passos imediatos
-- M3: onboarding conversacional no chat (fluxo curto) integrado ao backend.
+- M4: integracao com agentes e skills do backend.

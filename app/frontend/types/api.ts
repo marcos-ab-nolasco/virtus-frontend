@@ -433,6 +433,93 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/onboarding/start": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Start Onboarding
+     * @description Start the onboarding process.
+     *
+     *     Creates a new onboarding session for the user if not already started or completed.
+     *     If already in progress, returns the current state.
+     */
+    post: operations["start_onboarding_api_v1_onboarding_start_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/onboarding/message": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Process Message
+     * @description Process a user message during onboarding.
+     *
+     *     Validates the user's response, saves progress, and returns the next prompt.
+     */
+    post: operations["process_message_api_v1_onboarding_message_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/onboarding/status": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get Status
+     * @description Get the current onboarding status and progress.
+     */
+    get: operations["get_status_api_v1_onboarding_status_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/onboarding/skip": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /**
+     * Skip Onboarding
+     * @description Skip onboarding and mark as completed.
+     *
+     *     This allows users to skip the onboarding flow entirely.
+     */
+    patch: operations["skip_onboarding_api_v1_onboarding_skip_patch"];
+    trace?: never;
+  };
   "/health_check": {
     parameters: {
       query?: never;
@@ -674,6 +761,32 @@ export interface components {
        * @description OAuth scopes granted by user
        */
       scopes: string[];
+    };
+    /**
+     * CalendarIntegrationCreateResponse
+     * @description Response after creating calendar integration
+     */
+    CalendarIntegrationCreateResponse: {
+      /**
+       * Message
+       * @description Success message
+       */
+      message: string;
+      /**
+       * Integration Id
+       * @description ID of created integration
+       */
+      integration_id: string;
+      /**
+       * Provider
+       * @description Calendar provider name
+       */
+      provider: string;
+      /**
+       * Status
+       * @description Integration status
+       */
+      status: string;
     };
     /**
      * CalendarIntegrationResponse
@@ -964,6 +1077,123 @@ export interface components {
        * @description AI confidence level (0.0 to 1.0)
        */
       confidence: number;
+    };
+    /**
+     * OnboardingMessageRequest
+     * @description Request schema for POST /onboarding/message.
+     */
+    OnboardingMessageRequest: {
+      /**
+       * Message
+       * @description User's message
+       */
+      message: string;
+    };
+    /**
+     * OnboardingMessageResponse
+     * @description Response schema for POST /onboarding/message.
+     */
+    OnboardingMessageResponse: {
+      /**
+       * Current Step
+       * @description Current onboarding step
+       */
+      current_step: string;
+      /**
+       * Next Step
+       * @description Next step (null if complete)
+       */
+      next_step?: string | null;
+      /**
+       * Assistant Message
+       * @description Response message from assistant
+       */
+      assistant_message: string;
+      /**
+       * Is Step Complete
+       * @description Whether current step is complete
+       */
+      is_step_complete: boolean;
+      /**
+       * Validation Error
+       * @description Validation error message if any
+       */
+      validation_error?: string | null;
+    };
+    /**
+     * OnboardingSkipResponse
+     * @description Response schema for PATCH /onboarding/skip.
+     */
+    OnboardingSkipResponse: {
+      /**
+       * Status
+       * @description Onboarding status (should be COMPLETED)
+       */
+      status: string;
+      /**
+       * Completed At
+       * Format: date-time
+       * @description When onboarding was marked as completed
+       */
+      completed_at: string;
+    };
+    /**
+     * OnboardingStartResponse
+     * @description Response schema for POST /onboarding/start.
+     */
+    OnboardingStartResponse: {
+      /**
+       * Status
+       * @description Onboarding status (NOT_STARTED, IN_PROGRESS, COMPLETED)
+       */
+      status: string;
+      /**
+       * Current Step
+       * @description Current onboarding step
+       */
+      current_step: string;
+      /**
+       * Message
+       * @description Welcome message from the assistant
+       */
+      message: string;
+      /**
+       * Started At
+       * Format: date-time
+       * @description When onboarding started
+       */
+      started_at: string;
+    };
+    /**
+     * OnboardingStatusResponse
+     * @description Response schema for GET /onboarding/status.
+     */
+    OnboardingStatusResponse: {
+      /**
+       * Status
+       * @description Onboarding status (NOT_STARTED, IN_PROGRESS, COMPLETED)
+       */
+      status: string;
+      /**
+       * Current Step
+       * @description Current onboarding step
+       */
+      current_step?: string | null;
+      /**
+       * Progress Percent
+       * @description Progress percentage
+       */
+      progress_percent: number;
+      /**
+       * Started At
+       * @description When onboarding started
+       */
+      started_at?: string | null;
+      /**
+       * Completed At
+       * @description When onboarding completed
+       */
+      completed_at?: string | null;
     };
     /**
      * SubscriptionResponse
@@ -1282,10 +1512,27 @@ export interface components {
        */
       dashboard_updated_at?: string | null;
       /**
+       * Onboarding Started At
+       * @description When onboarding was started
+       */
+      onboarding_started_at?: string | null;
+      /**
        * Onboarding Completed At
        * @description When onboarding was completed
        */
       onboarding_completed_at?: string | null;
+      /**
+       * Onboarding Current Step
+       * @description Current onboarding step
+       */
+      onboarding_current_step?: string | null;
+      /**
+       * Onboarding Data
+       * @description Partial onboarding data collected during the flow
+       */
+      onboarding_data?: {
+        [key: string]: unknown;
+      } | null;
       /**
        * Id
        * Format: uuid
@@ -1391,10 +1638,27 @@ export interface components {
        */
       dashboard_updated_at?: string | null;
       /**
+       * Onboarding Started At
+       * @description When onboarding was started
+       */
+      onboarding_started_at?: string | null;
+      /**
        * Onboarding Completed At
        * @description When onboarding was completed
        */
       onboarding_completed_at?: string | null;
+      /**
+       * Onboarding Current Step
+       * @description Current onboarding step
+       */
+      onboarding_current_step?: string | null;
+      /**
+       * Onboarding Data
+       * @description Partial onboarding data collected during the flow
+       */
+      onboarding_data?: {
+        [key: string]: unknown;
+      } | null;
     };
     /**
      * UserRead
@@ -1432,32 +1696,6 @@ export interface components {
       msg: string;
       /** Error Type */
       type: string;
-    };
-    /**
-     * CalendarIntegrationResponse
-     * @description Response after creating calendar integration
-     */
-    src__schemas__oauth__CalendarIntegrationResponse: {
-      /**
-       * Message
-       * @description Success message
-       */
-      message: string;
-      /**
-       * Integration Id
-       * @description ID of created integration
-       */
-      integration_id: string;
-      /**
-       * Provider
-       * @description Calendar provider name
-       */
-      provider: string;
-      /**
-       * Status
-       * @description Integration status
-       */
-      status: string;
     };
   };
   responses: never;
@@ -1623,7 +1861,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["src__schemas__oauth__CalendarIntegrationResponse"];
+          "application/json": components["schemas"]["CalendarIntegrationCreateResponse"];
         };
       };
       /** @description Validation Error */
@@ -2208,6 +2446,99 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  start_onboarding_api_v1_onboarding_start_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["OnboardingStartResponse"];
+        };
+      };
+    };
+  };
+  process_message_api_v1_onboarding_message_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["OnboardingMessageRequest"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["OnboardingMessageResponse"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  get_status_api_v1_onboarding_status_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["OnboardingStatusResponse"];
+        };
+      };
+    };
+  };
+  skip_onboarding_api_v1_onboarding_skip_patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["OnboardingSkipResponse"];
         };
       };
     };
