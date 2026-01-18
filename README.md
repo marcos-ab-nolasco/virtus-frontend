@@ -1,4 +1,4 @@
-# virtus frontend
+# Virtus Frontend
 
 Frontend web do Virtus v3 (React SPA), pensado para validar agentes/skills com qualidade antes do canal WhatsApp.
 
@@ -13,6 +13,7 @@ Frontend web do Virtus v3 (React SPA), pensado para validar agentes/skills com q
 - O frontend consome a API REST autenticada (JWT) do backend.
 - O chat envia mensagens para o agente/orquestrador e exibe respostas.
 - O OAuth web dispara o fluxo de autorizacao e reflete o estado da integracao.
+  - O OAuth do Google e apenas para calendario (nao e login social).
 
 ## Arquitetura (alto nivel)
 - Next.js com rotas e layouts para navegacao e areas protegidas.
@@ -24,6 +25,10 @@ Frontend web do Virtus v3 (React SPA), pensado para validar agentes/skills com q
 - react-hook-form + zod
 - zustand
 - openapi-fetch
+
+## Notas importantes
+- Requer o backend rodando com a API em `/api/v1`.
+- O chat atual e um sandbox para testar providers/prompt; o assistente final ainda sera acoplado.
 
 ## Estrutura de pastas (resumo)
 - `app/frontend/src`: paginas, layouts e rotas do app
