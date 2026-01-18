@@ -4,7 +4,7 @@ set -euo pipefail
 echo "🔄 Generating TypeScript types from OpenAPI spec..."
 
 # Backend URL (default to localhost:8000, can be overridden)
-BACKEND_URL="${BACKEND_URL:-http://localhost:8000}"
+BACKEND_URL="http://localhost:8000"
 OPENAPI_URL="${BACKEND_URL}/api/v1/openapi.json"
 
 # Output directory and file
