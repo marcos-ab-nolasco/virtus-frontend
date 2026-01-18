@@ -11,6 +11,10 @@ export async function initiateGoogleOAuth(): Promise<string> {
   const response = await authenticatedClient.GET("/api/v1/auth/google");
 
   if (!response.data?.authorization_url) {
+    const error = (response as { error?: string }).error;
+    if (error) {
+      throw new Error(error);
+    }
     throw new Error("Falha ao iniciar OAuth.");
   }
 

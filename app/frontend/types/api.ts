@@ -857,32 +857,6 @@ export interface components {
       scopes: string[];
     };
     /**
-     * CalendarIntegrationCreateResponse
-     * @description Response after creating calendar integration
-     */
-    CalendarIntegrationCreateResponse: {
-      /**
-       * Message
-       * @description Success message
-       */
-      message: string;
-      /**
-       * Integration Id
-       * @description ID of created integration
-       */
-      integration_id: string;
-      /**
-       * Provider
-       * @description Calendar provider name
-       */
-      provider: string;
-      /**
-       * Status
-       * @description Integration status
-       */
-      status: string;
-    };
-    /**
      * CalendarIntegrationResponse
      * @description Schema for CalendarIntegration API responses.
      *
@@ -2066,9 +2040,13 @@ export interface operations {
     parameters: {
       query: {
         /** @description Authorization code from Google */
-        code: string;
+        code?: string | null;
         /** @description State parameter for validation */
         state: string;
+        /** @description OAuth error from Google */
+        error?: string | null;
+        /** @description OAuth error description */
+        error_description?: string | null;
       };
       header?: never;
       path?: never;
@@ -2077,13 +2055,11 @@ export interface operations {
     requestBody?: never;
     responses: {
       /** @description Successful Response */
-      200: {
+      303: {
         headers: {
           [name: string]: unknown;
         };
-        content: {
-          "application/json": components["schemas"]["CalendarIntegrationCreateResponse"];
-        };
+        content?: never;
       };
       /** @description Validation Error */
       422: {
