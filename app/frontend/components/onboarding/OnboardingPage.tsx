@@ -7,9 +7,11 @@ import { ProgressIndicator } from "./ProgressIndicator";
 import { OnboardingMessageList } from "./OnboardingMessageList";
 import { OnboardingComplete } from "./OnboardingComplete";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
+import { useAuth } from "@/hooks/useAuth";
 
 export function OnboardingPage() {
   const router = useRouter();
+  const { refreshOnboardingStatus } = useAuth();
   const {
     messages,
     status,
@@ -39,10 +41,13 @@ export function OnboardingPage() {
       try {
         const response = await getStatus();
         if (response.status === "COMPLETED") {
+          await refreshOnboardingStatus().catch(() => undefined);
           setIsRedirecting(true);
           router.replace("/dashboard");
           return;
         }
+
+        await refreshOnboardingStatus().catch(() => undefined);
       } catch (err) {
         if (mounted) {
           const message = err instanceof Error ? err.message : "Erro ao carregar onboarding";
