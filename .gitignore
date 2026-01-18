@@ -71,3 +71,5 @@ dmypy.json
 # Prompts
 CLAUDE.md
 historic_chat/
+planning/
+roadmap/

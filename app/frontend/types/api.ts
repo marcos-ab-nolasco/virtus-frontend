@@ -104,6 +104,51 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/auth/google": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Initiate Google Oauth
+     * @description Initiate Google OAuth flow
+     *
+     *     Returns authorization URL for user to grant permissions.
+     *     State parameter is stored temporarily for validation.
+     */
+    get: operations["initiate_google_oauth_api_v1_auth_google_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/auth/google/callback": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Google Oauth Callback
+     * @description Handle Google OAuth callback
+     *
+     *     Exchanges authorization code for tokens and creates calendar integration.
+     */
+    get: operations["google_oauth_callback_api_v1_auth_google_callback_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/chat/conversations": {
     parameters: {
       query?: never;
@@ -200,6 +245,194 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/me/profile": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get My Profile
+     * @description Get current user's profile.
+     *
+     *     Returns:
+     *         UserProfileResponse with all profile data
+     */
+    get: operations["get_my_profile_api_v1_me_profile_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /**
+     * Update My Profile
+     * @description Update current user's profile (partial update).
+     *
+     *     Args:
+     *         profile_update: Profile fields to update (only provided fields will be updated)
+     *
+     *     Returns:
+     *         Updated UserProfileResponse
+     */
+    patch: operations["update_my_profile_api_v1_me_profile_patch"];
+    trace?: never;
+  };
+  "/api/v1/me/preferences": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get My Preferences
+     * @description Get current user's preferences.
+     *
+     *     Returns:
+     *         UserPreferencesResponse with all settings
+     */
+    get: operations["get_my_preferences_api_v1_me_preferences_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /**
+     * Update My Preferences
+     * @description Update current user's preferences (partial update).
+     *
+     *     Args:
+     *         preferences_update: Preference fields to update (only provided fields will be updated)
+     *
+     *     Returns:
+     *         Updated UserPreferencesResponse
+     */
+    patch: operations["update_my_preferences_api_v1_me_preferences_patch"];
+    trace?: never;
+  };
+  "/api/v1/me/subscription": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get My Subscription
+     * @description Get current user's subscription.
+     *
+     *     Returns:
+     *         SubscriptionResponse with tier, status, and validity dates
+     */
+    get: operations["get_my_subscription_api_v1_me_subscription_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /**
+     * Update My Subscription
+     * @description Update current user's subscription (partial update).
+     *
+     *     Args:
+     *         subscription_update: Subscription fields to update (only provided fields will be updated)
+     *
+     *     Returns:
+     *         Updated SubscriptionResponse
+     */
+    patch: operations["update_my_subscription_api_v1_me_subscription_patch"];
+    trace?: never;
+  };
+  "/api/v1/me/calendar/integrations": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * List Integrations
+     * @description List all calendar integrations for the authenticated user.
+     *
+     *     Returns integration status, provider info, and sync settings.
+     *     OAuth tokens are never exposed.
+     */
+    get: operations["list_integrations_api_v1_me_calendar_integrations_get"];
+    put?: never;
+    /**
+     * Connect Calendar
+     * @description Connect a calendar provider (Google Calendar, Outlook, Apple Calendar).
+     *
+     *     This endpoint is called after successful OAuth flow to store the integration.
+     *     Tokens are encrypted before storage and never exposed in responses.
+     */
+    post: operations["connect_calendar_api_v1_me_calendar_integrations_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/me/calendar/integrations/{integration_id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get Integration
+     * @description Get details of a specific calendar integration.
+     */
+    get: operations["get_integration_api_v1_me_calendar_integrations__integration_id__get"];
+    put?: never;
+    post?: never;
+    /**
+     * Disconnect Calendar
+     * @description Disconnect a calendar integration.
+     *
+     *     This will:
+     *     - Delete the integration and all OAuth tokens
+     *     - Cascade delete all synced events from this integration
+     */
+    delete: operations["disconnect_calendar_api_v1_me_calendar_integrations__integration_id__delete"];
+    options?: never;
+    head?: never;
+    /**
+     * Update Integration
+     * @description Update calendar integration settings.
+     *
+     *     Allows updating:
+     *     - calendars_synced: Which calendars to include
+     *     - sync_enabled: Enable/disable automatic sync
+     */
+    patch: operations["update_integration_api_v1_me_calendar_integrations__integration_id__patch"];
+    trace?: never;
+  };
+  "/api/v1/me/calendar/events": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * List Events
+     * @description List calendar events within a date range.
+     *
+     *     Returns all synced events from connected calendar providers.
+     *     Used by planning features to show availability and commitments.
+     */
+    get: operations["list_events_api_v1_me_calendar_events_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/health_check": {
     parameters: {
       query?: never;
@@ -259,6 +492,250 @@ export interface components {
       /** Providers */
       providers: components["schemas"]["AIProvider"][];
     };
+    /**
+     * AnnualObjectiveItem
+     * @description Single annual objective item.
+     */
+    AnnualObjectiveItem: {
+      /**
+       * Id
+       * @description Unique identifier for the objective
+       */
+      id: string;
+      /**
+       * Description
+       * @description Objective description
+       */
+      description: string;
+      /**
+       * Life Area
+       * @description Life area (health, work, relationships, etc.)
+       */
+      life_area: string;
+      /**
+       * Priority
+       * @description Priority level (1=highest, 5=lowest)
+       */
+      priority: number;
+    };
+    /**
+     * CalendarConfigItem
+     * @description Individual calendar configuration within an integration.
+     */
+    CalendarConfigItem: {
+      /**
+       * Calendar Id
+       * @description Calendar ID from external provider
+       */
+      calendar_id: string;
+      /**
+       * Calendar Name
+       * @description Display name of the calendar
+       */
+      calendar_name: string;
+      /**
+       * Color
+       * @description Hex color code (#RRGGBB)
+       */
+      color: string;
+      /**
+       * Include In Planning
+       * @description Whether to include this calendar in planning features
+       * @default true
+       */
+      include_in_planning: boolean;
+    };
+    /**
+     * CalendarEventListResponse
+     * @description Schema for paginated list of calendar events.
+     */
+    CalendarEventListResponse: {
+      /** Events */
+      events: components["schemas"]["CalendarEventResponse"][];
+      /**
+       * Total
+       * @description Total number of events in date range
+       */
+      total: number;
+      /**
+       * Start Date
+       * Format: date-time
+       * @description Start of queried date range
+       */
+      start_date: string;
+      /**
+       * End Date
+       * Format: date-time
+       * @description End of queried date range
+       */
+      end_date: string;
+    };
+    /**
+     * CalendarEventResponse
+     * @description Schema for CalendarEvent API responses.
+     */
+    CalendarEventResponse: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /**
+       * Integration Id
+       * Format: uuid
+       */
+      integration_id: string;
+      /**
+       * User Id
+       * Format: uuid
+       */
+      user_id: string;
+      /** External Id */
+      external_id: string;
+      /** Title */
+      title: string;
+      /** Description */
+      description: string | null;
+      /** Location */
+      location: string | null;
+      /**
+       * Start Time
+       * Format: date-time
+       */
+      start_time: string;
+      /**
+       * End Time
+       * Format: date-time
+       */
+      end_time: string;
+      /** Is All Day */
+      is_all_day: boolean;
+      /** Calendar Id */
+      calendar_id: string;
+      /** Calendar Name */
+      calendar_name: string;
+      event_type: components["schemas"]["EventType"] | null;
+      /** Is Recurring */
+      is_recurring: boolean;
+      /**
+       * Synced At
+       * Format: date-time
+       */
+      synced_at: string;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /**
+       * Updated At
+       * Format: date-time
+       */
+      updated_at: string;
+    };
+    /**
+     * CalendarIntegrationCreate
+     * @description Schema for creating a new CalendarIntegration.
+     *
+     *     Note: access_token and refresh_token are passed separately via OAuth flow,
+     *     not through this schema.
+     */
+    CalendarIntegrationCreate: {
+      provider: components["schemas"]["CalendarProvider"];
+      /**
+       * Calendars Synced
+       * @description List of calendars to sync from this provider
+       */
+      calendars_synced?: components["schemas"]["CalendarConfigItem"][] | null;
+      /**
+       * Sync Enabled
+       * @description Whether automatic sync is enabled
+       * @default true
+       */
+      sync_enabled: boolean;
+      /**
+       * Access Token
+       * @description OAuth access token (will be encrypted)
+       */
+      access_token: string;
+      /**
+       * Refresh Token
+       * @description OAuth refresh token (will be encrypted)
+       */
+      refresh_token: string;
+      /**
+       * Token Expires At
+       * Format: date-time
+       * @description When the access token expires
+       */
+      token_expires_at: string;
+      /**
+       * Scopes
+       * @description OAuth scopes granted by user
+       */
+      scopes: string[];
+    };
+    /**
+     * CalendarIntegrationResponse
+     * @description Schema for CalendarIntegration API responses.
+     *
+     *     IMPORTANT: Never expose access_token or refresh_token in responses!
+     */
+    CalendarIntegrationResponse: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /**
+       * User Id
+       * Format: uuid
+       */
+      user_id: string;
+      provider: components["schemas"]["CalendarProvider"];
+      status: components["schemas"]["IntegrationStatus"];
+      /** Calendars Synced */
+      calendars_synced: components["schemas"]["CalendarConfigItem"][] | null;
+      /** Sync Enabled */
+      sync_enabled: boolean;
+      /** Last Sync At */
+      last_sync_at: string | null;
+      /** Sync Error */
+      sync_error: string | null;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /**
+       * Updated At
+       * Format: date-time
+       */
+      updated_at: string;
+      /**
+       * Token Expires At
+       * Format: date-time
+       */
+      token_expires_at: string;
+      /** Scopes */
+      scopes: string[];
+    };
+    /**
+     * CalendarIntegrationUpdate
+     * @description Schema for updating CalendarIntegration (partial update).
+     */
+    CalendarIntegrationUpdate: {
+      /** Calendars Synced */
+      calendars_synced?: components["schemas"]["CalendarConfigItem"][] | null;
+      /** Sync Enabled */
+      sync_enabled?: boolean | null;
+    };
+    /**
+     * CalendarProvider
+     * @description Calendar providers supported for integration.
+     * @enum {string}
+     */
+    CalendarProvider: "GOOGLE_CALENDAR" | "OUTLOOK" | "APPLE_CALENDAR";
     /**
      * ConversationCreate
      * @description Schema for creating a new conversation.
@@ -333,11 +810,23 @@ export interface components {
       /** System Prompt */
       system_prompt?: string | null;
     };
+    /**
+     * EventType
+     * @description Event types inferred from calendar event metadata.
+     * @enum {string}
+     */
+    EventType: "MEETING" | "FOCUS" | "PERSONAL" | "TRAVEL" | "OTHER";
     /** HTTPValidationError */
     HTTPValidationError: {
       /** Detail */
       detail?: components["schemas"]["ValidationError"][];
     };
+    /**
+     * IntegrationStatus
+     * @description Status of calendar integration.
+     * @enum {string}
+     */
+    IntegrationStatus: "PENDING" | "ACTIVE" | "TOKEN_EXPIRED" | "ERROR" | "DISCONNECTED";
     /**
      * MessageCreate
      * @description Schema for creating a new message.
@@ -404,6 +893,160 @@ export interface components {
       created_at: string;
     };
     /**
+     * MoralProfileSchema
+     * @description Moral foundations profile (0-1 scale for each foundation).
+     */
+    MoralProfileSchema: {
+      /**
+       * Care
+       * @description Care/Harm foundation
+       */
+      care: number;
+      /**
+       * Fairness
+       * @description Fairness/Cheating foundation
+       */
+      fairness: number;
+      /**
+       * Loyalty
+       * @description Loyalty/Betrayal foundation
+       */
+      loyalty: number;
+      /**
+       * Authority
+       * @description Authority/Subversion foundation
+       */
+      authority: number;
+      /**
+       * Purity
+       * @description Purity/Degradation foundation
+       */
+      purity: number;
+      /**
+       * Liberty
+       * @description Liberty/Oppression foundation
+       */
+      liberty: number;
+    };
+    /**
+     * OAuthInitiateResponse
+     * @description Response for OAuth initiation
+     */
+    OAuthInitiateResponse: {
+      /**
+       * Authorization Url
+       * @description URL to redirect user for authorization
+       */
+      authorization_url: string;
+      /**
+       * State
+       * @description State parameter for CSRF protection
+       */
+      state: string;
+    };
+    /**
+     * ObservedPatternItem
+     * @description Observed behavioral pattern.
+     */
+    ObservedPatternItem: {
+      /**
+       * Pattern Type
+       * @description Pattern type (productivity, energy, mood, etc.)
+       */
+      pattern_type: string;
+      /**
+       * Description
+       * @description Pattern description
+       */
+      description: string;
+      /**
+       * Confidence
+       * @description AI confidence level (0.0 to 1.0)
+       */
+      confidence: number;
+    };
+    /**
+     * SubscriptionResponse
+     * @description Schema for Subscription API responses.
+     */
+    SubscriptionResponse: {
+      /**
+       * Tier
+       * @description Subscription tier (FREE, TRIAL, PAID, case-insensitive)
+       * @default FREE
+       */
+      tier: string;
+      /**
+       * Status
+       * @description Subscription status (ACTIVE, CANCELLED, EXPIRED, TRIAL_ENDED, case-insensitive)
+       * @default ACTIVE
+       */
+      status: string;
+      /**
+       * End Date
+       * @description Subscription end date (NULL for FREE tier or unlimited PAID)
+       */
+      end_date?: string | null;
+      /**
+       * Trial Ends At
+       * @description Trial period expiration (only for TRIAL tier)
+       */
+      trial_ends_at?: string | null;
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /**
+       * User Id
+       * Format: uuid
+       */
+      user_id: string;
+      /**
+       * Start Date
+       * Format: date-time
+       */
+      start_date: string;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /**
+       * Updated At
+       * Format: date-time
+       */
+      updated_at: string;
+    };
+    /**
+     * SubscriptionUpdate
+     * @description Schema for updating Subscription (partial update via PATCH).
+     *
+     *     All fields are optional to support partial updates.
+     */
+    SubscriptionUpdate: {
+      /**
+       * Tier
+       * @description Subscription tier (FREE, TRIAL, PAID)
+       */
+      tier?: string | null;
+      /**
+       * Status
+       * @description Subscription status (ACTIVE, CANCELLED, EXPIRED, TRIAL_ENDED)
+       */
+      status?: string | null;
+      /**
+       * End Date
+       * @description Subscription end date (NULL for FREE tier or unlimited PAID)
+       */
+      end_date?: string | null;
+      /**
+       * Trial Ends At
+       * @description Trial period expiration (only for TRIAL tier)
+       */
+      trial_ends_at?: string | null;
+    };
+    /**
      * Token
      * @description Token response schema.
      */
@@ -432,6 +1075,326 @@ export interface components {
       full_name?: string | null;
       /** Password */
       password: string;
+    };
+    /**
+     * UserPreferencesResponse
+     * @description Schema for UserPreferences API responses.
+     */
+    UserPreferencesResponse: {
+      /**
+       * Timezone
+       * @description User's timezone (e.g., 'America/Sao_Paulo')
+       * @default UTC
+       */
+      timezone: string;
+      /**
+       * Morning Checkin Enabled
+       * @description Enable morning check-ins
+       * @default true
+       */
+      morning_checkin_enabled: boolean;
+      /**
+       * Morning Checkin Time
+       * Format: time
+       * @description Morning check-in time
+       * @default 08:00:00
+       */
+      morning_checkin_time: string;
+      /**
+       * Evening Checkin Enabled
+       * @description Enable evening check-ins
+       * @default true
+       */
+      evening_checkin_enabled: boolean;
+      /**
+       * Evening Checkin Time
+       * Format: time
+       * @description Evening check-in time
+       * @default 21:00:00
+       */
+      evening_checkin_time: string;
+      /**
+       * Weekly Review Day
+       * @description Preferred day for weekly review (MONDAY-SUNDAY, case-insensitive)
+       * @default SUNDAY
+       */
+      weekly_review_day: string;
+      /**
+       * Communication Style
+       * @description AI communication style (DIRECT, GENTLE, MOTIVATING, case-insensitive)
+       * @default DIRECT
+       */
+      communication_style: string;
+      /**
+       * Coach Name
+       * @description Custom name for the AI coach
+       * @default Virtus
+       */
+      coach_name: string;
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /**
+       * User Id
+       * Format: uuid
+       */
+      user_id: string;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /**
+       * Updated At
+       * Format: date-time
+       */
+      updated_at: string;
+    };
+    /**
+     * UserPreferencesUpdate
+     * @description Schema for updating UserPreferences (partial update via PATCH).
+     *
+     *     All fields are optional to support partial updates.
+     */
+    UserPreferencesUpdate: {
+      /**
+       * Timezone
+       * @description User's timezone (e.g., 'America/Sao_Paulo')
+       */
+      timezone?: string | null;
+      /**
+       * Morning Checkin Enabled
+       * @description Enable morning check-ins
+       */
+      morning_checkin_enabled?: boolean | null;
+      /**
+       * Morning Checkin Time
+       * @description Morning check-in time
+       */
+      morning_checkin_time?: string | null;
+      /**
+       * Evening Checkin Enabled
+       * @description Enable evening check-ins
+       */
+      evening_checkin_enabled?: boolean | null;
+      /**
+       * Evening Checkin Time
+       * @description Evening check-in time
+       */
+      evening_checkin_time?: string | null;
+      /**
+       * Weekly Review Day
+       * @description Preferred day for weekly review (monday-sunday)
+       */
+      weekly_review_day?: string | null;
+      /**
+       * Communication Style
+       * @description AI communication style (direct, gentle, motivating)
+       */
+      communication_style?: string | null;
+      /**
+       * Coach Name
+       * @description Custom name for the AI coach
+       */
+      coach_name?: string | null;
+    };
+    /**
+     * UserProfileResponse
+     * @description Schema for UserProfile API responses.
+     */
+    UserProfileResponse: {
+      /**
+       * Vision 5 Years
+       * @description User's 5-year vision
+       */
+      vision_5_years?: string | null;
+      /**
+       * Vision 5 Years Themes
+       * @description Key themes in 5-year vision
+       */
+      vision_5_years_themes?: string[] | null;
+      /**
+       * Main Obstacle
+       * @description Current main obstacle
+       */
+      main_obstacle?: string | null;
+      /**
+       * Annual Objectives
+       * @description List of annual objectives
+       */
+      annual_objectives?: components["schemas"]["AnnualObjectiveItem"][] | null;
+      /**
+       * Observed Patterns
+       * @description AI-observed behavioral patterns
+       */
+      observed_patterns?: components["schemas"]["ObservedPatternItem"][] | null;
+      /** @description Moral foundations profile */
+      moral_profile?: components["schemas"]["MoralProfileSchema"] | null;
+      /**
+       * Strengths
+       * @description User strengths (array of objects)
+       */
+      strengths?: {
+        [key: string]: unknown;
+      } | null;
+      /**
+       * Interests
+       * @description User interests (array of objects)
+       */
+      interests?: {
+        [key: string]: unknown;
+      } | null;
+      /**
+       * Energy Activities
+       * @description Activities that give energy
+       */
+      energy_activities?: string[] | null;
+      /**
+       * Drain Activities
+       * @description Activities that drain energy
+       */
+      drain_activities?: string[] | null;
+      /**
+       * Satisfaction Health
+       * @description Health satisfaction (1-10)
+       */
+      satisfaction_health?: number | null;
+      /**
+       * Satisfaction Work
+       * @description Work satisfaction (1-10)
+       */
+      satisfaction_work?: number | null;
+      /**
+       * Satisfaction Relationships
+       * @description Relationships satisfaction (1-10)
+       */
+      satisfaction_relationships?: number | null;
+      /**
+       * Satisfaction Personal Time
+       * @description Personal time satisfaction (1-10)
+       */
+      satisfaction_personal_time?: number | null;
+      /**
+       * Dashboard Updated At
+       * @description Last update of satisfaction scores
+       */
+      dashboard_updated_at?: string | null;
+      /**
+       * Onboarding Completed At
+       * @description When onboarding was completed
+       */
+      onboarding_completed_at?: string | null;
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /**
+       * User Id
+       * Format: uuid
+       */
+      user_id: string;
+      /** Onboarding Status */
+      onboarding_status: string;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /**
+       * Updated At
+       * Format: date-time
+       */
+      updated_at: string;
+    };
+    /**
+     * UserProfileUpdate
+     * @description Schema for updating UserProfile (partial update via PATCH).
+     */
+    UserProfileUpdate: {
+      /**
+       * Vision 5 Years
+       * @description User's 5-year vision
+       */
+      vision_5_years?: string | null;
+      /**
+       * Vision 5 Years Themes
+       * @description Key themes in 5-year vision
+       */
+      vision_5_years_themes?: string[] | null;
+      /**
+       * Main Obstacle
+       * @description Current main obstacle
+       */
+      main_obstacle?: string | null;
+      /**
+       * Annual Objectives
+       * @description List of annual objectives
+       */
+      annual_objectives?: components["schemas"]["AnnualObjectiveItem"][] | null;
+      /**
+       * Observed Patterns
+       * @description AI-observed behavioral patterns
+       */
+      observed_patterns?: components["schemas"]["ObservedPatternItem"][] | null;
+      /** @description Moral foundations profile */
+      moral_profile?: components["schemas"]["MoralProfileSchema"] | null;
+      /**
+       * Strengths
+       * @description User strengths (array of objects)
+       */
+      strengths?: {
+        [key: string]: unknown;
+      } | null;
+      /**
+       * Interests
+       * @description User interests (array of objects)
+       */
+      interests?: {
+        [key: string]: unknown;
+      } | null;
+      /**
+       * Energy Activities
+       * @description Activities that give energy
+       */
+      energy_activities?: string[] | null;
+      /**
+       * Drain Activities
+       * @description Activities that drain energy
+       */
+      drain_activities?: string[] | null;
+      /**
+       * Satisfaction Health
+       * @description Health satisfaction (1-10)
+       */
+      satisfaction_health?: number | null;
+      /**
+       * Satisfaction Work
+       * @description Work satisfaction (1-10)
+       */
+      satisfaction_work?: number | null;
+      /**
+       * Satisfaction Relationships
+       * @description Relationships satisfaction (1-10)
+       */
+      satisfaction_relationships?: number | null;
+      /**
+       * Satisfaction Personal Time
+       * @description Personal time satisfaction (1-10)
+       */
+      satisfaction_personal_time?: number | null;
+      /**
+       * Dashboard Updated At
+       * @description Last update of satisfaction scores
+       */
+      dashboard_updated_at?: string | null;
+      /**
+       * Onboarding Completed At
+       * @description When onboarding was completed
+       */
+      onboarding_completed_at?: string | null;
     };
     /**
      * UserRead
@@ -469,6 +1432,32 @@ export interface components {
       msg: string;
       /** Error Type */
       type: string;
+    };
+    /**
+     * CalendarIntegrationResponse
+     * @description Response after creating calendar integration
+     */
+    src__schemas__oauth__CalendarIntegrationResponse: {
+      /**
+       * Message
+       * @description Success message
+       */
+      message: string;
+      /**
+       * Integration Id
+       * @description ID of created integration
+       */
+      integration_id: string;
+      /**
+       * Provider
+       * @description Calendar provider name
+       */
+      provider: string;
+      /**
+       * Status
+       * @description Integration status
+       */
+      status: string;
     };
   };
   responses: never;
@@ -590,6 +1579,60 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["UserRead"];
+        };
+      };
+    };
+  };
+  initiate_google_oauth_api_v1_auth_google_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["OAuthInitiateResponse"];
+        };
+      };
+    };
+  };
+  google_oauth_callback_api_v1_auth_google_callback_get: {
+    parameters: {
+      query: {
+        /** @description Authorization code from Google */
+        code: string;
+        /** @description State parameter for validation */
+        state: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["src__schemas__oauth__CalendarIntegrationResponse"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
         };
       };
     };
@@ -824,6 +1867,347 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["AIProviderList"];
+        };
+      };
+    };
+  };
+  get_my_profile_api_v1_me_profile_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["UserProfileResponse"];
+        };
+      };
+    };
+  };
+  update_my_profile_api_v1_me_profile_patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UserProfileUpdate"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["UserProfileResponse"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  get_my_preferences_api_v1_me_preferences_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["UserPreferencesResponse"];
+        };
+      };
+    };
+  };
+  update_my_preferences_api_v1_me_preferences_patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UserPreferencesUpdate"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["UserPreferencesResponse"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  get_my_subscription_api_v1_me_subscription_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["SubscriptionResponse"];
+        };
+      };
+    };
+  };
+  update_my_subscription_api_v1_me_subscription_patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["SubscriptionUpdate"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["SubscriptionResponse"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  list_integrations_api_v1_me_calendar_integrations_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["CalendarIntegrationResponse"][];
+        };
+      };
+    };
+  };
+  connect_calendar_api_v1_me_calendar_integrations_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CalendarIntegrationCreate"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["CalendarIntegrationResponse"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  get_integration_api_v1_me_calendar_integrations__integration_id__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        integration_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["CalendarIntegrationResponse"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  disconnect_calendar_api_v1_me_calendar_integrations__integration_id__delete: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        integration_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  update_integration_api_v1_me_calendar_integrations__integration_id__patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        integration_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CalendarIntegrationUpdate"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["CalendarIntegrationResponse"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  list_events_api_v1_me_calendar_events_get: {
+    parameters: {
+      query: {
+        /** @description Start of date range (ISO 8601) */
+        start_date: string;
+        /** @description End of date range (ISO 8601) */
+        end_date: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["CalendarEventListResponse"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
         };
       };
     };

@@ -4,6 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import Link from "next/link";
+import { DashboardSkeleton } from "@/components/ui/DashboardSkeleton";
 
 export default function DashboardPage() {
   const { user, isAuthenticated, logout, isLoading } = useAuth();
@@ -22,11 +23,7 @@ export default function DashboardPage() {
   };
 
   if (isLoading || !isAuthenticated) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-gray-600">Carregando...</div>
-      </div>
-    );
+    return <DashboardSkeleton />;
   }
 
   return (
