@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { useOAuth } from "@/hooks/useOAuth";
+import { useOnboardingGuard } from "@/hooks/useOnboardingGuard";
 import MainLayout from "@/components/layout/MainLayout";
 import ConnectionStatus from "@/components/features/ConnectionStatus";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
@@ -14,6 +15,7 @@ export default function SettingsPage() {
   const { connections, isLoading, fetchConnections, disconnect } = useOAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { isCheckingOnboarding } = useOnboardingGuard();
   const [toasts, setToasts] = useState<Array<{ id: string; message: string; type: ToastType }>>([]);
   const handledOAuthRef = useRef<string | null>(null);
 
@@ -52,10 +54,10 @@ export default function SettingsPage() {
   }, [isAuthenticated, authLoading, router]);
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isAuthenticated && !isCheckingOnboarding) {
       fetchConnections();
     }
-  }, [isAuthenticated, fetchConnections]);
+  }, [isAuthenticated, isCheckingOnboarding, fetchConnections]);
 
   useEffect(() => {
     if (!oauthStatus) {
@@ -114,7 +116,7 @@ export default function SettingsPage() {
     await disconnect(provider);
   };
 
-  if (authLoading) {
+  if (authLoading || isCheckingOnboarding) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <LoadingSpinner size="lg" text="Carregando..." />

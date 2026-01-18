@@ -1,9 +1,11 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { useAuthStore } from "@/store/auth";
 import * as authApi from "@/lib/api/auth";
+import * as onboardingApi from "@/lib/api/onboarding";
 import { setAuthToken, clearAuthToken, setRefreshTokenCallback } from "@/lib/api-client";
 
 vi.mock("@/lib/api/auth");
+vi.mock("@/lib/api/onboarding");
 vi.mock("@/lib/api-client");
 
 const defaultUser = {
@@ -24,8 +26,18 @@ describe("Auth Store", () => {
       isAuthenticated: false,
       isLoading: false,
       error: null,
+      onboardingStatus: null,
+      onboardingStatusError: null,
+      isOnboardingLoading: false,
     });
     vi.clearAllMocks();
+    vi.mocked(onboardingApi.getOnboardingStatus).mockResolvedValue({
+      status: "COMPLETED",
+      progress_percent: 100,
+      current_step: null,
+      started_at: null,
+      completed_at: null,
+    });
   });
 
   afterEach(() => {

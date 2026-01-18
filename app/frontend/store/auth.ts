@@ -2,7 +2,9 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { components } from "@/types/api";
 import * as authApi from "@/lib/api/auth";
+import * as onboardingApi from "@/lib/api/onboarding";
 import { setAuthToken, clearAuthToken, setRefreshTokenCallback } from "@/lib/api-client";
+import type { OnboardingStatus } from "@/types/onboarding";
 
 type UserRead = components["schemas"]["UserRead"];
 
@@ -13,6 +15,9 @@ interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
+  onboardingStatus: OnboardingStatus | null;
+  onboardingStatusError: string | null;
+  isOnboardingLoading: boolean;
 
   // Actions
   login: (email: string, password: string) => Promise<void>;
@@ -21,6 +26,7 @@ interface AuthState {
   refreshAuth: () => Promise<void>;
   refreshUser: () => Promise<void>;
   initializeSession: () => Promise<void>;
+  refreshOnboardingStatus: () => Promise<OnboardingStatus | null>;
   clearError: () => void;
 }
 
@@ -33,6 +39,9 @@ export const useAuthStore = create<AuthState>()(
       isAuthenticated: false,
       isLoading: false,
       error: null,
+      onboardingStatus: null,
+      onboardingStatusError: null,
+      isOnboardingLoading: false,
 
       // Login action
       login: async (email: string, password: string) => {
@@ -51,6 +60,8 @@ export const useAuthStore = create<AuthState>()(
           setRefreshTokenCallback(async () => {
             await get().refreshAuth();
           });
+
+          await get().refreshOnboardingStatus();
         } catch (error) {
           const message = error instanceof Error ? error.message : "Login failed";
           set({ error: message, isLoading: false });
@@ -85,6 +96,9 @@ export const useAuthStore = create<AuthState>()(
             accessToken: null,
             isAuthenticated: false,
             error: null,
+            onboardingStatus: null,
+            onboardingStatusError: null,
+            isOnboardingLoading: false,
           });
         }
       },
@@ -113,6 +127,7 @@ export const useAuthStore = create<AuthState>()(
         try {
           const user = await authApi.getCurrentUser();
           set({ user, isAuthenticated: true, isLoading: false });
+          await get().refreshOnboardingStatus();
         } catch (error) {
           const message = error instanceof Error ? error.message : "Failed to refresh user";
           set({ error: message, isLoading: false });
@@ -129,10 +144,33 @@ export const useAuthStore = create<AuthState>()(
           setRefreshTokenCallback(async () => {
             await get().refreshAuth();
           });
+          await get().refreshOnboardingStatus();
         } catch {
           // Session not available; ensure clean state
           clearAuthToken();
-          set({ user: null, accessToken: null, isAuthenticated: false });
+          set({
+            user: null,
+            accessToken: null,
+            isAuthenticated: false,
+            onboardingStatus: null,
+            onboardingStatusError: null,
+            isOnboardingLoading: false,
+          });
+        }
+      },
+
+      refreshOnboardingStatus: async () => {
+        set({ isOnboardingLoading: true, onboardingStatusError: null });
+        try {
+          const response = await onboardingApi.getOnboardingStatus();
+          const status = response.status as OnboardingStatus;
+          set({ onboardingStatus: status, isOnboardingLoading: false });
+          return status;
+        } catch (error) {
+          const message =
+            error instanceof Error ? error.message : "Failed to load onboarding status";
+          set({ onboardingStatusError: message, isOnboardingLoading: false });
+          return null;
         }
       },
 

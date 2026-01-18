@@ -9,6 +9,7 @@ import Button from "@/components/ui/Button";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { ToastContainer, type ToastType } from "@/components/ui/Toast";
 import { useAuth } from "@/hooks/useAuth";
+import { useOnboardingGuard } from "@/hooks/useOnboardingGuard";
 import * as adminApi from "@/lib/api/admin";
 import type { components } from "@/types/api";
 
@@ -68,6 +69,7 @@ function getErrorMessage(action: "list" | ActionType, error: unknown): string {
 export default function AdminPage() {
   const { user, isAuthenticated, isLoading: authLoading } = useAuth();
   const router = useRouter();
+  const { isCheckingOnboarding } = useOnboardingGuard();
   const [users, setUsers] = useState<UserRead[]>([]);
   const [total, setTotal] = useState(0);
   const [offset, setOffset] = useState(0);
@@ -123,10 +125,10 @@ export default function AdminPage() {
   }, [authLoading, isAdmin, isAuthenticated, router]);
 
   useEffect(() => {
-    if (isAuthenticated && isAdmin) {
+    if (isAuthenticated && isAdmin && !isCheckingOnboarding) {
       fetchUsers(offset);
     }
-  }, [fetchUsers, isAuthenticated, isAdmin, offset]);
+  }, [fetchUsers, isAuthenticated, isAdmin, isCheckingOnboarding, offset]);
 
   const handleAction = async (targetUser: UserRead, action: ActionType) => {
     if (!user || targetUser.id === user.id) {
@@ -175,7 +177,7 @@ export default function AdminPage() {
     await handleAction(targetUser, "delete");
   };
 
-  if (authLoading || !isAuthenticated || !isAdmin) {
+  if (authLoading || isCheckingOnboarding || !isAuthenticated || !isAdmin) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <LoadingSpinner size="lg" text="Carregando..." />

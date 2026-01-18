@@ -40,7 +40,7 @@ export function OnboardingPage() {
         const response = await getStatus();
         if (response.status === "COMPLETED") {
           setIsRedirecting(true);
-          router.replace("/home");
+          router.replace("/dashboard");
           return;
         }
       } catch (err) {

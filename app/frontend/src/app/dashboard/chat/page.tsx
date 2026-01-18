@@ -8,10 +8,12 @@ import { Sidebar } from "@/components/chat/Sidebar";
 import { ChatInterface } from "@/components/chat/ChatInterface";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import MainLayout from "@/components/layout/MainLayout";
+import { useOnboardingGuard } from "@/hooks/useOnboardingGuard";
 
 export default function ChatPage() {
   const router = useRouter();
   const { isAuthenticated, isLoading: isAuthLoading } = useAuth();
+  const { isCheckingOnboarding } = useOnboardingGuard();
 
   const {
     conversations,
@@ -51,12 +53,12 @@ export default function ChatPage() {
 
   // Load conversations on mount
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isAuthenticated && !isCheckingOnboarding) {
       loadConversations().catch((error) => {
         console.error("Failed to load conversations:", error);
       });
     }
-  }, [isAuthenticated, loadConversations]);
+  }, [isAuthenticated, isCheckingOnboarding, loadConversations]);
 
   // Load messages when conversation changes
   useEffect(() => {
@@ -129,7 +131,7 @@ export default function ChatPage() {
   };
 
   // Loading state
-  if (isAuthLoading || !isAuthenticated) {
+  if (isAuthLoading || isCheckingOnboarding || !isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <LoadingSpinner size="lg" text="Carregando..." />

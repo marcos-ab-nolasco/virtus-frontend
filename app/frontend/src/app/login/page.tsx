@@ -9,7 +9,17 @@ import { useEffect } from "react";
 
 export default function LoginPage() {
   const router = useRouter();
-  const { login, isAuthenticated, isLoading, error, clearError } = useAuth();
+  const {
+    login,
+    isAuthenticated,
+    isLoading,
+    error,
+    clearError,
+    onboardingStatus,
+    isOnboardingLoading,
+    onboardingStatusError,
+    refreshOnboardingStatus,
+  } = useAuth();
 
   const {
     register,
@@ -21,16 +31,44 @@ export default function LoginPage() {
 
   // Redirect if already authenticated
   useEffect(() => {
-    if (isAuthenticated) {
+    if (!isAuthenticated) {
+      return;
+    }
+
+    if (!onboardingStatus && !onboardingStatusError && !isOnboardingLoading) {
+      refreshOnboardingStatus()
+        .then((status) => {
+          if (status && status !== "COMPLETED") {
+            router.push("/onboarding");
+            return;
+          }
+          router.push("/dashboard");
+        })
+        .catch((err) => {
+          console.error("Failed to refresh onboarding status:", err);
+          router.push("/onboarding");
+        });
+      return;
+    }
+
+    if (onboardingStatusError || (onboardingStatus && onboardingStatus !== "COMPLETED")) {
+      router.push("/onboarding");
+    } else {
       router.push("/dashboard");
     }
-  }, [isAuthenticated, router]);
+  }, [
+    isAuthenticated,
+    isOnboardingLoading,
+    onboardingStatus,
+    onboardingStatusError,
+    refreshOnboardingStatus,
+    router,
+  ]);
 
   const onSubmit = async (data: LoginFormData) => {
     clearError();
     try {
       await login(data.email, data.password);
-      router.push("/dashboard");
     } catch (err) {
       // Error is handled by the store
       console.error("Login error:", err);

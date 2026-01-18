@@ -20,11 +20,15 @@ let authState = {
   },
   isAuthenticated: true,
   isLoading: false,
+  onboardingStatus: "COMPLETED",
+  onboardingStatusError: null,
+  isOnboardingLoading: false,
+  refreshOnboardingStatus: vi.fn().mockResolvedValue("COMPLETED"),
   logout: vi.fn(),
 };
 
 vi.mock("next/navigation", () => ({
-  useRouter: () => ({ push: pushMock }),
+  useRouter: () => ({ push: pushMock, replace: pushMock }),
   usePathname: () => "/admin",
 }));
 
@@ -61,6 +65,10 @@ describe("AdminPage", () => {
       user: adminUser,
       isAuthenticated: true,
       isLoading: false,
+      onboardingStatus: "COMPLETED",
+      onboardingStatusError: null,
+      isOnboardingLoading: false,
+      refreshOnboardingStatus: vi.fn().mockResolvedValue("COMPLETED"),
       logout: vi.fn(),
     };
     vi.clearAllMocks();
