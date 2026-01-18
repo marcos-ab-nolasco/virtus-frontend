@@ -10,7 +10,15 @@ vi.mock("next/navigation", () => ({
 
 vi.mock("@/hooks/useAuth", () => ({
   useAuth: () => ({
-    user: { id: "1", email: "test@example.com", full_name: "Test User" },
+    user: {
+      id: "1",
+      email: "test@example.com",
+      full_name: "Test User",
+      is_admin: false,
+      is_blocked: false,
+      created_at: "2024-01-01T00:00:00Z",
+      updated_at: "2024-01-01T00:00:00Z",
+    },
     logout: vi.fn().mockResolvedValue(undefined),
   }),
 }));
