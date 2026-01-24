@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import MainLayout from "@/components/layout/MainLayout";
 import Card from "@/components/ui/Card";
@@ -14,6 +14,7 @@ import * as adminApi from "@/lib/api/admin";
 import type { components } from "@/types/api";
 
 type UserRead = components["schemas"]["UserRead"];
+type AdminUserOnboardingResponse = components["schemas"]["AdminUserOnboardingResponse"];
 
 const PAGE_SIZE = 10;
 
@@ -23,9 +24,13 @@ interface ToastItem {
   type?: ToastType;
 }
 
-type ActionType = "block" | "unblock" | "delete";
+type ActionType = "block" | "unblock" | "delete" | "reset";
+type OnboardingActionType = "onboarding";
 
-function getErrorMessage(action: "list" | ActionType, error: unknown): string {
+function getErrorMessage(
+  action: "list" | ActionType | OnboardingActionType,
+  error: unknown
+): string {
   const status =
     error && typeof error === "object" && "status" in error
       ? (error as { status?: number }).status
@@ -44,6 +49,9 @@ function getErrorMessage(action: "list" | ActionType, error: unknown): string {
     if (action === "unblock") {
       return "Usuário já está desbloqueado.";
     }
+    if (action === "reset") {
+      return "Não foi possível resetar o onboarding.";
+    }
     return "Não foi possível remover este usuário.";
   }
 
@@ -55,12 +63,20 @@ function getErrorMessage(action: "list" | ActionType, error: unknown): string {
     return "Falha ao carregar usuários.";
   }
 
+  if (action === "onboarding") {
+    return "Falha ao carregar onboarding.";
+  }
+
   if (action === "block") {
     return "Falha ao bloquear usuário.";
   }
 
   if (action === "unblock") {
     return "Falha ao desbloquear usuário.";
+  }
+
+  if (action === "reset") {
+    return "Falha ao resetar onboarding.";
   }
 
   return "Falha ao remover usuário.";
@@ -79,6 +95,11 @@ export default function AdminPage() {
     action: ActionType | null;
   }>({ id: null, action: null });
   const [toasts, setToasts] = useState<ToastItem[]>([]);
+  const [onboardingDetails, setOnboardingDetails] = useState<
+    Record<string, AdminUserOnboardingResponse | null>
+  >({});
+  const [expandedUserId, setExpandedUserId] = useState<string | null>(null);
+  const [onboardingLoadingId, setOnboardingLoadingId] = useState<string | null>(null);
 
   const isAdmin = Boolean(user?.is_admin);
 
@@ -131,7 +152,11 @@ export default function AdminPage() {
   }, [fetchUsers, isAuthenticated, isAdmin, isCheckingOnboarding, offset]);
 
   const handleAction = async (targetUser: UserRead, action: ActionType) => {
-    if (!user || targetUser.id === user.id) {
+    if (!user) {
+      return;
+    }
+
+    if (targetUser.id === user.id && action !== "reset") {
       return;
     }
 
@@ -157,6 +182,13 @@ export default function AdminPage() {
         }
       }
 
+      if (action === "reset") {
+        const data = await adminApi.resetUserOnboarding(targetUser.id);
+        setOnboardingDetails((prev) => ({ ...prev, [targetUser.id]: data }));
+        setExpandedUserId(targetUser.id);
+        addToast(`Onboarding de ${targetUser.email} resetado com sucesso.`, "success");
+      }
+
       await fetchUsers(offset);
     } catch (error) {
       addToast(getErrorMessage(action, error), "error");
@@ -175,6 +207,43 @@ export default function AdminPage() {
     }
 
     await handleAction(targetUser, "delete");
+  };
+
+  const handleToggleOnboarding = async (targetUser: UserRead) => {
+    if (expandedUserId === targetUser.id) {
+      setExpandedUserId(null);
+      return;
+    }
+
+    setExpandedUserId(targetUser.id);
+
+    if (onboardingDetails[targetUser.id]) {
+      return;
+    }
+
+    setOnboardingLoadingId(targetUser.id);
+
+    try {
+      const data = await adminApi.getUserOnboarding(targetUser.id);
+      setOnboardingDetails((prev) => ({ ...prev, [targetUser.id]: data }));
+    } catch (error) {
+      addToast(getErrorMessage("onboarding", error), "error");
+      setExpandedUserId(null);
+    } finally {
+      setOnboardingLoadingId(null);
+    }
+  };
+
+  const handleResetOnboarding = async (targetUser: UserRead) => {
+    const confirmed = window.confirm(
+      `Tem certeza que deseja resetar o onboarding de ${targetUser.email}? Essa ação remove dados do perfil e preferências.`
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    await handleAction(targetUser, "reset");
   };
 
   if (authLoading || isCheckingOnboarding || !isAuthenticated || !isAdmin) {
@@ -231,54 +300,99 @@ export default function AdminPage() {
                     const isSelf = user?.id === item.id;
                     const isBlocked = item.is_blocked;
                     const isActionLoading = actionLoading.id === item.id;
+                    const isOnboardingLoading = onboardingLoadingId === item.id;
                     const actionLabel = isBlocked ? "Desbloquear" : "Bloquear";
                     const actionType = isBlocked ? "unblock" : "block";
 
                     return (
-                      <tr key={item.id}>
-                        <td className="px-4 py-4 text-sm text-neutral-900">
-                          <div className="flex items-center gap-2">
-                            <span>{item.full_name || "Sem nome"}</span>
-                            {isSelf && <Badge size="sm">Você</Badge>}
-                          </div>
-                        </td>
-                        <td className="px-4 py-4 text-sm text-neutral-700">{item.email}</td>
-                        <td className="px-4 py-4">
-                          <Badge variant={isBlocked ? "error" : "success"}>
-                            {isBlocked ? "Bloqueado" : "Ativo"}
-                          </Badge>
-                        </td>
-                        <td className="px-4 py-4">
-                          <div className="flex justify-end gap-2">
-                            <Button
-                              size="sm"
-                              variant={isBlocked ? "secondary" : "danger"}
-                              disabled={isSelf || isActionLoading}
-                              title={
-                                isSelf ? "Você não pode alterar sua própria conta." : undefined
-                              }
-                              onClick={() => handleAction(item, actionType)}
-                            >
-                              {isActionLoading && actionLoading.action === actionType
-                                ? "Aguarde..."
-                                : actionLabel}
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="danger"
-                              disabled={isSelf || isActionLoading}
-                              title={
-                                isSelf ? "Você não pode remover sua própria conta." : undefined
-                              }
-                              onClick={() => handleDelete(item)}
-                            >
-                              {isActionLoading && actionLoading.action === "delete"
-                                ? "Aguarde..."
-                                : "Remover"}
-                            </Button>
-                          </div>
-                        </td>
-                      </tr>
+                      <Fragment key={item.id}>
+                        <tr>
+                          <td className="px-4 py-4 text-sm text-neutral-900">
+                            <div className="flex items-center gap-2">
+                              <span>{item.full_name || "Sem nome"}</span>
+                              {isSelf && <Badge size="sm">Você</Badge>}
+                            </div>
+                          </td>
+                          <td className="px-4 py-4 text-sm text-neutral-700">{item.email}</td>
+                          <td className="px-4 py-4">
+                            <Badge variant={isBlocked ? "error" : "success"}>
+                              {isBlocked ? "Bloqueado" : "Ativo"}
+                            </Badge>
+                          </td>
+                          <td className="px-4 py-4">
+                            <div className="flex flex-wrap justify-end gap-2">
+                              <Button
+                                size="sm"
+                                variant="secondary"
+                                disabled={isOnboardingLoading}
+                                onClick={() => handleToggleOnboarding(item)}
+                              >
+                                {isOnboardingLoading ? "Aguarde..." : "Onboarding"}
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="secondary"
+                                disabled={isActionLoading}
+                                onClick={() => handleResetOnboarding(item)}
+                              >
+                                {isActionLoading && actionLoading.action === "reset"
+                                  ? "Aguarde..."
+                                  : "Resetar onboarding"}
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant={isBlocked ? "secondary" : "danger"}
+                                disabled={isSelf || isActionLoading}
+                                title={
+                                  isSelf ? "Você não pode alterar sua própria conta." : undefined
+                                }
+                                onClick={() => handleAction(item, actionType)}
+                              >
+                                {isActionLoading && actionLoading.action === actionType
+                                  ? "Aguarde..."
+                                  : actionLabel}
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="danger"
+                                disabled={isSelf || isActionLoading}
+                                title={
+                                  isSelf ? "Você não pode remover sua própria conta." : undefined
+                                }
+                                onClick={() => handleDelete(item)}
+                              >
+                                {isActionLoading && actionLoading.action === "delete"
+                                  ? "Aguarde..."
+                                  : "Remover"}
+                              </Button>
+                            </div>
+                          </td>
+                        </tr>
+                        {expandedUserId === item.id && (
+                          <tr>
+                            <td colSpan={4} className="bg-neutral-50 px-4 py-4">
+                              {isOnboardingLoading ? (
+                                <div className="flex items-center justify-center py-4">
+                                  <LoadingSpinner size="sm" text="Carregando onboarding..." />
+                                </div>
+                              ) : onboardingDetails[item.id] ? (
+                                <div className="space-y-2 text-xs text-neutral-700">
+                                  <div className="font-semibold text-neutral-800">
+                                    Dados de onboarding
+                                  </div>
+                                  <pre className="whitespace-pre-wrap break-words rounded bg-white p-3 text-xs text-neutral-700 shadow-sm">
+                                    {JSON.stringify(onboardingDetails[item.id], null, 2)}
+                                  </pre>
+                                </div>
+                              ) : (
+                                <div className="text-sm text-neutral-500">
+                                  Nenhum dado de onboarding disponível.
+                                </div>
+                              )}
+                            </td>
+                          </tr>
+                        )}
+                      </Fragment>
                     );
                   })}
                 </tbody>

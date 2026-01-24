@@ -145,10 +145,10 @@ describe("AdminPage", () => {
     if (!rowElement) return;
 
     const rowActions = within(rowElement);
-    const actionButtons = rowActions.getAllByRole("button");
-    actionButtons.forEach((button) => {
-      expect(button).toBeDisabled();
-    });
+    expect(rowActions.getByRole("button", { name: /^onboarding$/i })).toBeEnabled();
+    expect(rowActions.getByRole("button", { name: /resetar onboarding/i })).toBeEnabled();
+    expect(rowActions.getByRole("button", { name: /bloquear/i })).toBeDisabled();
+    expect(rowActions.getByRole("button", { name: /remover/i })).toBeDisabled();
   });
 
   it("redirects non-admin users", async () => {
@@ -176,5 +176,78 @@ describe("AdminPage", () => {
     await waitFor(() => {
       expect(pushMock).toHaveBeenCalledWith("/dashboard");
     });
+  });
+
+  it("loads onboarding details when requested", async () => {
+    vi.mocked(adminApi.listUsers).mockResolvedValue({
+      users: [adminUser, otherUser],
+      total: 2,
+      limit: 10,
+      offset: 0,
+    });
+
+    vi.mocked(adminApi.getUserOnboarding).mockResolvedValue({
+      user_id: otherUser.id,
+      profile: {
+        id: "profile-1",
+        user_id: otherUser.id,
+        onboarding_status: "IN_PROGRESS",
+        onboarding_started_at: null,
+        onboarding_completed_at: null,
+        onboarding_current_step: "name",
+        onboarding_data: { name: "Maria" },
+        vision_5_years: null,
+        vision_5_years_themes: null,
+        main_obstacle: null,
+        annual_objectives: null,
+        observed_patterns: null,
+        moral_profile: null,
+        strengths: null,
+        interests: null,
+        energy_activities: null,
+        drain_activities: null,
+        satisfaction_health: null,
+        satisfaction_work: null,
+        satisfaction_relationships: null,
+        satisfaction_personal_time: null,
+        dashboard_updated_at: null,
+        created_at: timestamp,
+        updated_at: timestamp,
+      },
+      preferences: {
+        id: "pref-1",
+        user_id: otherUser.id,
+        timezone: "UTC",
+        morning_checkin_enabled: true,
+        morning_checkin_time: "08:00:00",
+        evening_checkin_enabled: true,
+        evening_checkin_time: "21:00:00",
+        weekly_review_day: "SUNDAY",
+        communication_style: "DIRECT",
+        coach_name: "Virtus",
+        created_at: timestamp,
+        updated_at: timestamp,
+      },
+    });
+
+    render(<AdminPage />);
+
+    await screen.findByText(/administração de usuários/i);
+
+    const user = userEvent.setup();
+    const userRow = screen.getByText(otherUser.email).closest("tr");
+    expect(userRow).not.toBeNull();
+    if (!userRow) return;
+
+    const rowActions = within(userRow);
+    const onboardingButton = rowActions.getByRole("button", { name: /^onboarding$/i });
+
+    await user.click(onboardingButton);
+
+    await waitFor(() => {
+      expect(adminApi.getUserOnboarding).toHaveBeenCalledWith(otherUser.id);
+    });
+
+    expect(await screen.findByText(/dados de onboarding/i)).toBeInTheDocument();
   });
 });
