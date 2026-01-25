@@ -1,4 +1,4 @@
-import { authenticatedClient, apiClient } from "@/lib/api-client";
+import { authenticatedClient } from "@/lib/api-client";
 import type { components } from "@/types/api";
 
 export type OAuthConnection = components["schemas"]["CalendarIntegrationResponse"];
@@ -8,10 +8,14 @@ export type OAuthConnection = components["schemas"]["CalendarIntegrationResponse
  * @returns Authorization URL to redirect user to
  */
 export async function initiateGoogleOAuth(): Promise<string> {
-  const response = await apiClient.GET("/api/v1/auth/google");
+  const response = await authenticatedClient.GET("/api/v1/auth/google");
 
-  if (!response.data) {
-    throw new Error("Failed to initiate OAuth");
+  if (!response.data?.authorization_url) {
+    const error = (response as { error?: string }).error;
+    if (error) {
+      throw new Error(error);
+    }
+    throw new Error("Falha ao iniciar OAuth.");
   }
 
   return response.data.authorization_url;

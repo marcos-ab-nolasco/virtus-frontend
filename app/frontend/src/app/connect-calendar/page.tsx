@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { useOAuth } from "@/hooks/useOAuth";
+import { useOnboardingGuard } from "@/hooks/useOnboardingGuard";
 import MainLayout from "@/components/layout/MainLayout";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
@@ -14,6 +15,7 @@ export default function ConnectCalendarPage() {
   const { isAuthenticated, isLoading: authLoading } = useAuth();
   const { initiateOAuth, isLoading, error, clearError } = useOAuth();
   const router = useRouter();
+  const { isCheckingOnboarding } = useOnboardingGuard();
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -26,7 +28,7 @@ export default function ConnectCalendarPage() {
     await initiateOAuth("google");
   };
 
-  if (authLoading) {
+  if (authLoading || isCheckingOnboarding) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <LoadingSpinner size="lg" text="Carregando..." />

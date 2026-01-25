@@ -7,10 +7,12 @@ import Link from "next/link";
 import { DashboardSkeleton } from "@/components/ui/DashboardSkeleton";
 import MainLayout from "@/components/layout/MainLayout";
 import Card from "@/components/ui/Card";
+import { useOnboardingGuard } from "@/hooks/useOnboardingGuard";
 
 export default function DashboardPage() {
   const { user, isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
+  const { isCheckingOnboarding } = useOnboardingGuard();
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -19,7 +21,7 @@ export default function DashboardPage() {
     }
   }, [isAuthenticated, isLoading, router]);
 
-  if (isLoading || !isAuthenticated) {
+  if (isLoading || isCheckingOnboarding || !isAuthenticated) {
     return <DashboardSkeleton />;
   }
 

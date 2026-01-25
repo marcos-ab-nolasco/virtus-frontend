@@ -5,18 +5,61 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function Home() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const {
+    isAuthenticated,
+    isLoading,
+    onboardingStatus,
+    onboardingStatusError,
+    isOnboardingLoading,
+    refreshOnboardingStatus,
+  } = useAuth();
   const router = useRouter();
 
-  // Redirect authenticated users to dashboard
+  // Redirect authenticated users based on onboarding status
   useEffect(() => {
-    if (isAuthenticated && !isLoading) {
-      router.push("/dashboard");
+    if (!isAuthenticated || isLoading) {
+      return;
     }
-  }, [isAuthenticated, isLoading, router]);
+
+    if (!onboardingStatus && !isOnboardingLoading) {
+      refreshOnboardingStatus()
+        .then((status) => {
+          if (!status || status !== "COMPLETED") {
+            router.replace("/onboarding");
+            return;
+          }
+          router.replace("/dashboard");
+        })
+        .catch((error) => {
+          console.error("Failed to refresh onboarding status:", error);
+          router.replace("/onboarding");
+        });
+      return;
+    }
+
+    if (onboardingStatusError || (onboardingStatus && onboardingStatus !== "COMPLETED")) {
+      router.replace("/onboarding");
+      return;
+    }
+
+    if (onboardingStatus === "COMPLETED") {
+      router.replace("/dashboard");
+    }
+  }, [
+    isAuthenticated,
+    isLoading,
+    isOnboardingLoading,
+    onboardingStatus,
+    onboardingStatusError,
+    refreshOnboardingStatus,
+    router,
+  ]);
 
   // Show loading state while checking authentication
-  if (isLoading) {
+  if (
+    isLoading ||
+    (isAuthenticated && (isOnboardingLoading || (!onboardingStatus && !onboardingStatusError)))
+  ) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800">
         <div className="text-center">

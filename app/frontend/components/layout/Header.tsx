@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Menu } from "lucide-react";
 import type { components } from "@/types/api";
 
@@ -75,13 +76,13 @@ export default function Header({ user, onLogout, onToggleMobileMenu }: HeaderPro
                   aria-hidden="true"
                 />
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20 border border-neutral-200">
-                  <a
+                  <Link
                     href="/settings"
                     className="block px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-100"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Configurações
-                  </a>
+                  </Link>
                   <button
                     onClick={handleLogout}
                     className="block w-full text-left px-4 py-2 text-sm text-error-600 hover:bg-neutral-100"

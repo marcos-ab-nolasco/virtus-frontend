@@ -184,6 +184,46 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/admin/users/{user_id}/onboarding": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get User Onboarding
+     * @description Get onboarding data for a user.
+     */
+    get: operations["get_user_onboarding_admin_users__user_id__onboarding_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/admin/users/{user_id}/onboarding/reset": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Reset User Onboarding
+     * @description Reset onboarding data and preferences for a user.
+     */
+    post: operations["reset_user_onboarding_admin_users__user_id__onboarding_reset_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/auth/google": {
     parameters: {
       query?: never;
@@ -674,6 +714,19 @@ export interface components {
       offset: number;
     };
     /**
+     * AdminUserOnboardingResponse
+     * @description Schema for admin access to user onboarding data.
+     */
+    AdminUserOnboardingResponse: {
+      /**
+       * User Id
+       * Format: uuid
+       */
+      user_id: string;
+      profile: components["schemas"]["UserProfileResponse"];
+      preferences: components["schemas"]["UserPreferencesResponse"];
+    };
+    /**
      * AnnualObjectiveItem
      * @description Single annual objective item.
      */
@@ -855,32 +908,6 @@ export interface components {
        * @description OAuth scopes granted by user
        */
       scopes: string[];
-    };
-    /**
-     * CalendarIntegrationCreateResponse
-     * @description Response after creating calendar integration
-     */
-    CalendarIntegrationCreateResponse: {
-      /**
-       * Message
-       * @description Success message
-       */
-      message: string;
-      /**
-       * Integration Id
-       * @description ID of created integration
-       */
-      integration_id: string;
-      /**
-       * Provider
-       * @description Calendar provider name
-       */
-      provider: string;
-      /**
-       * Status
-       * @description Integration status
-       */
-      status: string;
     };
     /**
      * CalendarIntegrationResponse
@@ -2042,6 +2069,68 @@ export interface operations {
       };
     };
   };
+  get_user_onboarding_admin_users__user_id__onboarding_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        user_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["AdminUserOnboardingResponse"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  reset_user_onboarding_admin_users__user_id__onboarding_reset_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        user_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["AdminUserOnboardingResponse"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
   initiate_google_oauth_api_v1_auth_google_get: {
     parameters: {
       query?: never;
@@ -2066,9 +2155,13 @@ export interface operations {
     parameters: {
       query: {
         /** @description Authorization code from Google */
-        code: string;
+        code?: string | null;
         /** @description State parameter for validation */
         state: string;
+        /** @description OAuth error from Google */
+        error?: string | null;
+        /** @description OAuth error description */
+        error_description?: string | null;
       };
       header?: never;
       path?: never;
@@ -2077,13 +2170,11 @@ export interface operations {
     requestBody?: never;
     responses: {
       /** @description Successful Response */
-      200: {
+      303: {
         headers: {
           [name: string]: unknown;
         };
-        content: {
-          "application/json": components["schemas"]["CalendarIntegrationCreateResponse"];
-        };
+        content?: never;
       };
       /** @description Validation Error */
       422: {
