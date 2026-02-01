@@ -2,7 +2,15 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, MessageSquare, Calendar, Settings, Shield } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Home,
+  MessageSquare,
+  Calendar,
+  Settings,
+  Shield,
+} from "lucide-react";
 import { twMerge } from "tailwind-merge";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -12,7 +20,12 @@ interface NavItem {
   icon: React.ReactNode;
 }
 
-export default function Sidebar() {
+interface SidebarProps {
+  collapsed?: boolean;
+  onToggleCollapse?: () => void;
+}
+
+export default function Sidebar({ collapsed = false, onToggleCollapse }: SidebarProps) {
   const pathname = usePathname();
   const { user } = useAuth();
 
@@ -57,10 +70,23 @@ export default function Sidebar() {
 
   return (
     <nav
-      className="w-64 bg-white border-r border-neutral-200 h-full"
+      className={twMerge(
+        "relative bg-surface border-r border-border h-full transition-[width] duration-200",
+        collapsed ? "w-20" : "w-64"
+      )}
       aria-label="Sidebar navigation"
     >
-      <div className="flex flex-col gap-1 p-4">
+      {onToggleCollapse && (
+        <button
+          type="button"
+          onClick={onToggleCollapse}
+          className="hidden lg:flex absolute -right-3 top-6 h-7 w-7 items-center justify-center rounded-full border border-border bg-surface text-slate-500 shadow-sm opacity-30 transition hover:opacity-100"
+          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+        >
+          {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+        </button>
+      )}
+      <div className={twMerge("flex flex-col gap-1 p-4", collapsed && "px-3")}>
         {navItems.map((item) => {
           const active = isActive(item.href);
           return (
@@ -68,14 +94,18 @@ export default function Sidebar() {
               key={item.href}
               href={item.href}
               className={twMerge(
-                "flex items-center gap-3 px-4 py-3 rounded-md transition-colors",
+                "relative flex items-center gap-3 px-4 py-3 rounded-md transition-colors",
+                collapsed && "justify-center px-2",
                 active
-                  ? "bg-primary-50 text-primary-700 font-medium"
-                  : "text-neutral-700 hover:bg-neutral-50"
+                  ? twMerge(
+                      "bg-slate-500/10 text-slate-600 font-medium dark:text-bone-50 dark:bg-slate-500/20 before:content-[''] before:absolute before:top-2 before:bottom-2 before:w-1 before:rounded-full before:bg-slate-500",
+                      collapsed ? "before:left-1" : "before:left-2"
+                    )
+                  : "text-slate-600 hover:bg-slate-500/10 dark:text-bone-50/70 dark:hover:bg-slate-500/10"
               )}
             >
               {item.icon}
-              <span>{item.label}</span>
+              <span className={collapsed ? "sr-only" : undefined}>{item.label}</span>
             </Link>
           );
         })}
