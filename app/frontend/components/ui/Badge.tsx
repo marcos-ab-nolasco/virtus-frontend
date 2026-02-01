@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
 
 interface BadgeProps {
-  variant?: "success" | "error" | "warning" | "neutral";
+  variant?: "success" | "error" | "danger" | "info" | "neutral";
   size?: "sm" | "md";
   children: ReactNode;
   className?: string;
@@ -14,13 +14,15 @@ export default function Badge({
   children,
   className,
 }: BadgeProps) {
-  const baseStyles = "inline-flex items-center px-2.5 py-0.5 rounded-full font-medium";
+  const baseStyles = "inline-flex items-center px-2.5 py-0.5 rounded-pill font-body font-medium";
 
   const variantStyles = {
-    success: "bg-secondary-100 text-secondary-800",
-    error: "bg-error-100 text-error-800",
-    warning: "bg-warning-100 text-warning-800",
-    neutral: "bg-neutral-100 text-neutral-800",
+    success: "bg-success-bg text-teal-500",
+    // Map error to danger for backwards compatibility
+    error: "bg-danger-bg text-danger-text",
+    danger: "bg-danger-bg text-danger-text",
+    info: "bg-info-bg text-slate-500",
+    neutral: "bg-gray-300 text-navy-900",
   };
 
   const sizeStyles = {

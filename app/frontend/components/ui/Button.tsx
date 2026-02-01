@@ -17,14 +17,14 @@ export default function Button({
   ...props
 }: ButtonProps) {
   const baseStyles =
-    "font-medium rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed";
+    "font-heading font-medium rounded-pill transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed";
 
   const variantStyles = {
-    primary: "bg-primary-500 text-white hover:bg-primary-700 focus:ring-primary-500",
+    primary: "bg-slate-500 text-bone-50 hover:bg-slate-600 focus:ring-slate-500",
     secondary:
-      "border-2 border-primary-500 text-primary-700 hover:bg-primary-50 focus:ring-primary-500",
-    ghost: "text-primary-700 hover:bg-primary-50 focus:ring-primary-500",
-    danger: "bg-error-500 text-white hover:bg-error-700 focus:ring-error-500",
+      "border-2 border-slate-500 text-slate-500 hover:bg-slate-500/10 focus:ring-slate-500",
+    ghost: "text-slate-500 hover:bg-slate-500/10 focus:ring-slate-500",
+    danger: "bg-teal-500 text-bone-50 hover:bg-teal-600 focus:ring-teal-500",
   };
 
   const sizeStyles = {
