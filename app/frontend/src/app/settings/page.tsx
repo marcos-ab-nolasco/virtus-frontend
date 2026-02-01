@@ -192,13 +192,13 @@ export default function SettingsPage() {
   return (
     <MainLayout>
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-neutral-900 mb-8">Configurações</h1>
+        <h1 className="text-3xl font-bold text-foreground mb-8">Configurações</h1>
 
         <div className="space-y-8">
           {/* Integrations Section */}
           <section>
-            <h2 className="text-xl font-semibold text-neutral-900 mb-4">Integrações</h2>
-            <p className="text-neutral-600 mb-6">
+            <h2 className="text-xl font-semibold text-foreground mb-4">Integrações</h2>
+            <p className="text-muted mb-6">
               Gerencie suas integrações com serviços de calendário e outras ferramentas.
             </p>
 
@@ -232,9 +232,7 @@ export default function SettingsPage() {
 
                 {/* Placeholder for future integrations */}
                 {connections.length === 0 && (
-                  <div className="text-center py-8 text-neutral-500">
-                    Nenhuma integração configurada.
-                  </div>
+                  <div className="text-center py-8 text-muted">Nenhuma integração configurada.</div>
                 )}
               </div>
             )}
@@ -242,8 +240,8 @@ export default function SettingsPage() {
 
           {/* Account Section */}
           <section>
-            <h2 className="text-xl font-semibold text-neutral-900 mb-4">Conta</h2>
-            <p className="text-neutral-600 mb-6">
+            <h2 className="text-xl font-semibold text-foreground mb-4">Conta</h2>
+            <p className="text-muted mb-6">
               Dados do perfil coletados no onboarding e preferencias da sua conta.
             </p>
 
@@ -258,47 +256,47 @@ export default function SettingsPage() {
             ) : (
               <div className="grid gap-6 lg:grid-cols-2">
                 <Card>
-                  <h3 className="text-lg font-semibold text-neutral-900 mb-3">Perfil</h3>
-                  <div className="space-y-3 text-sm text-neutral-700">
+                  <h3 className="text-lg font-semibold text-foreground mb-3">Perfil</h3>
+                  <div className="space-y-3 text-sm text-foreground/90">
                     <div className="flex items-start justify-between gap-4">
-                      <span className="text-neutral-500">Status do onboarding</span>
-                      <span className="font-medium text-neutral-900">
+                      <span className="text-muted">Status do onboarding</span>
+                      <span className="font-medium text-foreground">
                         {renderValue(profile?.onboarding_status)}
                       </span>
                     </div>
                     <div className="flex items-start justify-between gap-4">
-                      <span className="text-neutral-500">Etapa atual</span>
-                      <span className="font-medium text-neutral-900">
+                      <span className="text-muted">Etapa atual</span>
+                      <span className="font-medium text-foreground">
                         {renderValue(profile?.onboarding_current_step)}
                       </span>
                     </div>
                     <div className="flex items-start justify-between gap-4">
-                      <span className="text-neutral-500">Visao em 5 anos</span>
-                      <span className="font-medium text-neutral-900 text-right">
+                      <span className="text-muted">Visao em 5 anos</span>
+                      <span className="font-medium text-foreground text-right">
                         {renderValue(profile?.vision_5_years)}
                       </span>
                     </div>
                     <div className="flex items-start justify-between gap-4">
-                      <span className="text-neutral-500">Temas da visao</span>
-                      <span className="font-medium text-neutral-900 text-right">
+                      <span className="text-muted">Temas da visao</span>
+                      <span className="font-medium text-foreground text-right">
                         {renderValue(profile?.vision_5_years_themes)}
                       </span>
                     </div>
                     <div className="flex items-start justify-between gap-4">
-                      <span className="text-neutral-500">Maior obstaculo</span>
-                      <span className="font-medium text-neutral-900 text-right">
+                      <span className="text-muted">Maior obstaculo</span>
+                      <span className="font-medium text-foreground text-right">
                         {renderValue(profile?.main_obstacle)}
                       </span>
                     </div>
                     <div className="flex items-start justify-between gap-4">
-                      <span className="text-neutral-500">Atividades que dao energia</span>
-                      <span className="font-medium text-neutral-900 text-right">
+                      <span className="text-muted">Atividades que dao energia</span>
+                      <span className="font-medium text-foreground text-right">
                         {renderValue(profile?.energy_activities)}
                       </span>
                     </div>
                     <div className="flex items-start justify-between gap-4">
-                      <span className="text-neutral-500">Atividades que drenam energia</span>
-                      <span className="font-medium text-neutral-900 text-right">
+                      <span className="text-muted">Atividades que drenam energia</span>
+                      <span className="font-medium text-foreground text-right">
                         {renderValue(profile?.drain_activities)}
                       </span>
                     </div>
@@ -306,43 +304,43 @@ export default function SettingsPage() {
                 </Card>
 
                 <Card>
-                  <h3 className="text-lg font-semibold text-neutral-900 mb-3">Preferencias</h3>
-                  <div className="space-y-3 text-sm text-neutral-700">
+                  <h3 className="text-lg font-semibold text-foreground mb-3">Preferencias</h3>
+                  <div className="space-y-3 text-sm text-foreground/90">
                     <div className="flex items-start justify-between gap-4">
-                      <span className="text-neutral-500">Fuso horario</span>
-                      <span className="font-medium text-neutral-900">
+                      <span className="text-muted">Fuso horario</span>
+                      <span className="font-medium text-foreground">
                         {renderValue(preferences?.timezone)}
                       </span>
                     </div>
                     <div className="flex items-start justify-between gap-4">
-                      <span className="text-neutral-500">Nome do coach</span>
-                      <span className="font-medium text-neutral-900">
+                      <span className="text-muted">Nome do coach</span>
+                      <span className="font-medium text-foreground">
                         {renderValue(preferences?.coach_name)}
                       </span>
                     </div>
                     <div className="flex items-start justify-between gap-4">
-                      <span className="text-neutral-500">Estilo de comunicacao</span>
-                      <span className="font-medium text-neutral-900">
+                      <span className="text-muted">Estilo de comunicacao</span>
+                      <span className="font-medium text-foreground">
                         {renderValue(preferences?.communication_style)}
                       </span>
                     </div>
                     <div className="flex items-start justify-between gap-4">
-                      <span className="text-neutral-500">Check-in matinal</span>
-                      <span className="font-medium text-neutral-900">
+                      <span className="text-muted">Check-in matinal</span>
+                      <span className="font-medium text-foreground">
                         {renderValue(preferences?.morning_checkin_enabled)} (
                         {renderValue(preferences?.morning_checkin_time)})
                       </span>
                     </div>
                     <div className="flex items-start justify-between gap-4">
-                      <span className="text-neutral-500">Check-in noturno</span>
-                      <span className="font-medium text-neutral-900">
+                      <span className="text-muted">Check-in noturno</span>
+                      <span className="font-medium text-foreground">
                         {renderValue(preferences?.evening_checkin_enabled)} (
                         {renderValue(preferences?.evening_checkin_time)})
                       </span>
                     </div>
                     <div className="flex items-start justify-between gap-4">
-                      <span className="text-neutral-500">Revisao semanal</span>
-                      <span className="font-medium text-neutral-900">
+                      <span className="text-muted">Revisao semanal</span>
+                      <span className="font-medium text-foreground">
                         {renderValue(preferences?.weekly_review_day)}
                       </span>
                     </div>
