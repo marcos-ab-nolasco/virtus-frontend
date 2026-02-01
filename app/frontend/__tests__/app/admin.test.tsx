@@ -225,6 +225,7 @@ describe("AdminPage", () => {
         weekly_review_day: "SUNDAY",
         communication_style: "DIRECT",
         coach_name: "Virtus",
+        contact_frequency: "SOMETIMES",
         created_at: timestamp,
         updated_at: timestamp,
       },

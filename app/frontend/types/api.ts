@@ -1483,6 +1483,12 @@ export interface components {
        */
       coach_name: string;
       /**
+       * Contact Frequency
+       * @description Preferred contact frequency (RARELY, SOMETIMES, FREQUENTLY, case-insensitive)
+       * @default SOMETIMES
+       */
+      contact_frequency: string;
+      /**
        * Id
        * Format: uuid
        */
@@ -1550,6 +1556,11 @@ export interface components {
        * @description Custom name for the AI coach
        */
       coach_name?: string | null;
+      /**
+       * Contact Frequency
+       * @description Preferred contact frequency (rarely, sometimes, frequently)
+       */
+      contact_frequency?: string | null;
     };
     /**
      * UserProfileResponse
