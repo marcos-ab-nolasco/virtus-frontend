@@ -17,7 +17,7 @@ describe("Input", () => {
   it("applies error styles when error is present", () => {
     render(<Input label="Email" name="email" error="Invalid" />);
     const input = screen.getByRole("textbox");
-    expect(input).toHaveClass("border-error-500");
+    expect(input).toHaveClass("border-danger-text");
   });
 
   it("calls onChange when value changes", async () => {

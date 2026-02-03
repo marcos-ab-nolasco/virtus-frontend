@@ -1,29 +1,40 @@
-# virtus frontend
+# Virtus Frontend
 
-Frontend web do Virtus v3 (React SPA), pensado para validar agentes/skills com qualidade antes do canal WhatsApp.
+Frontend web do Virtus v3 (React/Next.js), focado em validar agentes/skills antes dos canais finais.
 
-## O que existe hoje
-- Autenticacao completa (M1): login/cadastro, rotas protegidas, cliente API com estado de sessao.
-- Base visual (M2): design system inicial, layout de navegacao e componentes de chat.
-- OAuth UI (M2): fluxo de conexao com Google Calendar e status de integracao.
+## Estado da construcao
+
+### Concluido (M1-M3)
+- Autenticacao completa: login/cadastro, rotas protegidas e sessao.
+- Base visual: design system inicial, layout de navegacao e chat.
+- OAuth UI: fluxo de conexao com Google Calendar e status de integracao.
 - Chat web basico para conversar com o agente e testar fluxos.
-- Onboarding UI (M3): interface conversacional de configuracao inicial com progress indicator, formularios inline, typing indicator e tela de conclusao.
+- Onboarding UI: conversacao guiada com progress indicator, formularios inline e tela de conclusao.
 
-## Como isso se conecta ao backend
-- O frontend consome a API REST autenticada (JWT) do backend.
+### Em andamento
+- M4: integracao do chat com agentes/skills do backend e refinamentos de UX do fluxo conversacional.
+
+## Visao geral do produto final
+- Experiencia conversacional completa (onboarding + chat) para operar o assistente.
+- Integracao transparente com calendario para contexto e execucao de tarefas.
+- UI consistente para gerenciar perfil, preferencias e integracoes.
+- Base pronta para expansao de canais (ex.: WhatsApp).
+
+## Proximos passos
+- Conectar chat ao orquestrador/skills com estados claros e feedback de erro.
+- Ajustar telemetria do frontend para acompanhar uso e sucesso dos fluxos.
+- Revisar acessibilidade e performance das telas principais.
+
+## Como se conecta ao backend
+- Consome a API REST autenticada (JWT) do backend.
 - O chat envia mensagens para o agente/orquestrador e exibe respostas.
 - O OAuth web dispara o fluxo de autorizacao e reflete o estado da integracao.
+  - O OAuth do Google e apenas para calendario (nao e login social).
 
 ## Arquitetura (alto nivel)
 - Next.js com rotas e layouts para navegacao e areas protegidas.
 - Camada de estado para sessao e chat (store) e forms validados.
 - Componentes de UI reutilizaveis + chat components para fluxos conversacionais.
-
-## Principais bibliotecas
-- Next.js, React, Tailwind CSS
-- react-hook-form + zod
-- zustand
-- openapi-fetch
 
 ## Estrutura de pastas (resumo)
 - `app/frontend/src`: paginas, layouts e rotas do app
@@ -33,5 +44,6 @@ Frontend web do Virtus v3 (React SPA), pensado para validar agentes/skills com q
 - `app/frontend/lib`: helpers e clientes API
 - `app/frontend/types`: tipos compartilhados
 
-## Proximos passos imediatos
-- M4: integracao com agentes e skills do backend.
+## Notas importantes
+- Requer o backend rodando com a API em `/api/v1`.
+- O chat atual e um sandbox; o assistente final ainda sera acoplado.

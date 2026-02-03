@@ -21,7 +21,7 @@ export function OnboardingComplete({ onContinue }: OnboardingCompleteProps) {
     if (onContinue) {
       onContinue();
     } else {
-      router.replace("/home");
+      router.replace("/dashboard");
     }
   }, [onContinue, router]);
 

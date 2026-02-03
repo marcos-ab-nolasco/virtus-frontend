@@ -20,18 +20,21 @@ export default function Input({
   const inputId = `input-${name}`;
 
   const baseStyles =
-    "w-full px-3 py-2 rounded-md border transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 disabled:bg-neutral-100 disabled:text-neutral-500 disabled:cursor-not-allowed";
+    "w-full px-3 py-2 rounded-input border transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 disabled:bg-gray-300/30 disabled:text-muted disabled:cursor-not-allowed font-body placeholder:text-muted bg-surface";
 
   const inputStyles = error
-    ? "border-error-500 focus:border-error-600 focus:ring-error-200"
-    : "border-neutral-300 focus:border-primary-500 focus:ring-primary-200";
+    ? "border-danger-text focus:border-danger-text focus:ring-danger-bg bg-danger-bg"
+    : "border-gray-300 focus:border-slate-500 focus:ring-slate-500/20";
 
   return (
     <div className="w-full">
       {label && (
-        <label htmlFor={inputId} className="block text-sm font-medium text-neutral-700 mb-1">
+        <label
+          htmlFor={inputId}
+          className="block text-sm font-body font-medium text-slate-500 mb-1"
+        >
           {label}
-          {required && <span className="text-error-500 ml-1">*</span>}
+          {required && <span className="text-danger-text ml-1">*</span>}
         </label>
       )}
       <input
@@ -46,7 +49,7 @@ export default function Input({
         {...props}
       />
       {error && (
-        <p id={`${inputId}-error`} className="mt-1 text-sm text-error-600" role="alert">
+        <p id={`${inputId}-error`} className="mt-1 text-sm text-danger-text font-body" role="alert">
           {error}
         </p>
       )}

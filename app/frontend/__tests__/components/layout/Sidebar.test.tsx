@@ -36,7 +36,7 @@ describe("Sidebar", () => {
 
     const dashboardLink = screen.getByRole("link", { name: /início/i });
     // Active link should have specific styling
-    expect(dashboardLink).toHaveClass("bg-primary-50");
+    expect(dashboardLink).toHaveClass("bg-slate-500/10");
   });
 
   it("applies correct href to links", () => {

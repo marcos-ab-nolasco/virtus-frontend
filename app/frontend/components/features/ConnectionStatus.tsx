@@ -15,7 +15,7 @@ interface ConnectionStatusProps {
 const providerInfo = {
   GOOGLE_CALENDAR: {
     name: "Google Calendar",
-    icon: <Calendar className="w-6 h-6 text-primary-600" />,
+    icon: <Calendar className="w-6 h-6 text-primary" />,
   },
   OUTLOOK: {
     name: "Outlook Calendar",
@@ -23,7 +23,7 @@ const providerInfo = {
   },
   APPLE_CALENDAR: {
     name: "Apple Calendar",
-    icon: <Calendar className="w-6 h-6 text-neutral-600" />,
+    icon: <Calendar className="w-6 h-6 text-slate-500" />,
   },
 };
 
@@ -68,20 +68,18 @@ export default function ConnectionStatus({
     <Card>
       <div className="flex items-start justify-between">
         <div className="flex items-start gap-4">
-          <div className="w-12 h-12 bg-neutral-50 rounded-lg flex items-center justify-center flex-shrink-0">
+          <div className="w-12 h-12 bg-slate-500/10 dark:bg-slate-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
             {info.icon}
           </div>
           <div className="flex-1">
-            <h3 className="text-lg font-semibold text-neutral-900 mb-1">{info.name}</h3>
+            <h3 className="text-lg font-semibold text-foreground mb-1">{info.name}</h3>
             <div className="flex items-center gap-2 mb-2">
               <Badge variant={connected ? "success" : "neutral"}>
                 {connected ? "Conectado" : "Desconectado"}
               </Badge>
             </div>
             {connected && lastSync && (
-              <p className="text-sm text-neutral-500">
-                Última sincronização: {formatLastSync(lastSync)}
-              </p>
+              <p className="text-sm text-muted">Última sincronização: {formatLastSync(lastSync)}</p>
             )}
           </div>
         </div>

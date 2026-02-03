@@ -1,15 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { initiateGoogleOAuth, checkOAuthStatus, disconnectOAuth } from "@/lib/api/oauth";
-import { apiClient, authenticatedClient } from "@/lib/api-client";
+import { authenticatedClient } from "@/lib/api-client";
 
-type ApiGetResult = Awaited<ReturnType<typeof apiClient.GET>>;
 type AuthenticatedGetResult = Awaited<ReturnType<typeof authenticatedClient.GET>>;
 type AuthenticatedDeleteResult = Awaited<ReturnType<typeof authenticatedClient.DELETE>>;
 
 vi.mock("@/lib/api-client", () => ({
-  apiClient: {
-    GET: vi.fn(),
-  },
   authenticatedClient: {
     GET: vi.fn(),
     DELETE: vi.fn(),
@@ -26,9 +22,9 @@ describe("OAuth API", () => {
       const mockResponse = {
         data: { authorization_url: "https://accounts.google.com/o/oauth2/auth?..." },
         response: {} as Response,
-      } as unknown as ApiGetResult;
+      } as unknown as AuthenticatedGetResult;
 
-      vi.mocked(apiClient.GET).mockResolvedValue(mockResponse);
+      vi.mocked(authenticatedClient.GET).mockResolvedValue(mockResponse);
 
       const url = await initiateGoogleOAuth();
 
@@ -36,7 +32,10 @@ describe("OAuth API", () => {
     });
 
     it("throws error when request fails", async () => {
-      vi.mocked(apiClient.GET).mockRejectedValue(new Error("Network error"));
+      vi.mocked(authenticatedClient.GET).mockResolvedValue({
+        error: "Network error",
+        response: {} as Response,
+      } as unknown as AuthenticatedGetResult);
 
       await expect(initiateGoogleOAuth()).rejects.toThrow("Network error");
     });

@@ -61,7 +61,7 @@ export function Sidebar({
       {/* Mobile toggle button */}
       <button
         onClick={() => setIsMobileOpen(!isMobileOpen)}
-        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-blue-600 text-white rounded-lg shadow-lg hover:bg-blue-700 transition-colors"
+        className="lg:hidden fixed top-20 left-4 z-50 p-2 bg-blue-600 text-white rounded-lg shadow-lg hover:bg-blue-700 transition-colors"
         aria-label="Toggle sidebar"
       >
         {isMobileOpen ? (
@@ -96,7 +96,7 @@ export function Sidebar({
       {/* Sidebar container */}
       <div
         className={`
-          fixed lg:static inset-y-0 left-0 z-40
+          fixed lg:static top-16 bottom-0 left-0 z-40
           w-80 lg:w-80
           transform transition-transform duration-300 ease-in-out
           ${isMobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}

@@ -9,7 +9,8 @@ interface CardProps {
 }
 
 export default function Card({ children, className, padding = "md", shadow = true }: CardProps) {
-  const baseStyles = "bg-white border border-neutral-200 rounded-lg";
+  const baseStyles =
+    "bg-surface border border-gray-300 rounded-card dark:bg-surface dark:border-gray-300/20";
 
   const paddingStyles = {
     sm: "p-3",
@@ -17,7 +18,7 @@ export default function Card({ children, className, padding = "md", shadow = tru
     lg: "p-6",
   };
 
-  const shadowStyles = shadow ? "shadow-md" : "";
+  const shadowStyles = shadow ? "shadow-soft" : "";
 
   return (
     <div className={twMerge(baseStyles, paddingStyles[padding], shadowStyles, className)}>

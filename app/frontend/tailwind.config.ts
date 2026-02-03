@@ -10,34 +10,55 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Orbital Calm Base Colors
+        navy: {
+          900: "var(--navy-900)",
+        },
+        bone: {
+          50: "var(--bone-50)",
+        },
+        gray: {
+          300: "var(--gray-300)",
+        },
+        slate: {
+          500: "var(--slate-500)",
+          600: "#4A5A72", // darker variant for hover
+        },
+        teal: {
+          500: "var(--teal-500)",
+          600: "#3D6161", // darker variant for hover
+        },
+        gold: {
+          500: "var(--gold-500)",
+        },
+
+        // Semantic Colors
+        primary: "var(--slate-500)",
+        secondary: "var(--teal-500)",
+        accent: "var(--gold-500)",
         background: "var(--background)",
+        surface: "var(--surface)",
+        text: "var(--text)",
+        muted: "var(--muted)",
+
+        // Legacy compatibility
         foreground: "var(--foreground)",
-        primary: {
-          50: "#eff6ff",
-          100: "#dbeafe",
-          200: "#bfdbfe",
-          300: "#93c5fd",
-          400: "#60a5fa",
-          500: "#3b82f6",
-          600: "#2563eb",
-          700: "#1d4ed8",
-          800: "#1e40af",
-          900: "#1e3a8a",
-          950: "#172554",
+
+        // State Colors
+        success: {
+          bg: "var(--success-bg)",
+          text: "var(--success-text)",
         },
-        secondary: {
-          50: "#f0fdf4",
-          100: "#dcfce7",
-          200: "#bbf7d0",
-          300: "#86efac",
-          400: "#4ade80",
-          500: "#22c55e",
-          600: "#16a34a",
-          700: "#15803d",
-          800: "#166534",
-          900: "#14532d",
-          950: "#052e16",
+        info: {
+          bg: "var(--info-bg)",
+          text: "var(--info-text)",
         },
+        danger: {
+          bg: "var(--danger-bg)",
+          text: "var(--danger-text)",
+        },
+
+        // Keep error for backwards compatibility
         error: {
           50: "#fef2f2",
           100: "#fee2e2",
@@ -51,34 +72,12 @@ export default {
           900: "#7f1d1d",
           950: "#450a0a",
         },
-        warning: {
-          50: "#fffbeb",
-          100: "#fef3c7",
-          200: "#fde68a",
-          300: "#fcd34d",
-          400: "#fbbf24",
-          500: "#f59e0b",
-          600: "#d97706",
-          700: "#b45309",
-          800: "#92400e",
-          900: "#78350f",
-          950: "#451a03",
-        },
-        neutral: {
-          50: "#fafafa",
-          100: "#f5f5f5",
-          200: "#e5e5e5",
-          300: "#d4d4d4",
-          400: "#a3a3a3",
-          500: "#737373",
-          600: "#525252",
-          700: "#404040",
-          800: "#262626",
-          900: "#171717",
-          950: "#0a0a0a",
-        },
       },
       borderRadius: {
+        card: "20px",
+        input: "16px",
+        pill: "999px",
+        // Keep defaults for backwards compatibility
         sm: "0.375rem",
         DEFAULT: "0.5rem",
         md: "0.5rem",
@@ -87,11 +86,19 @@ export default {
         "2xl": "2rem",
       },
       boxShadow: {
+        soft: "var(--shadow-soft)",
+        "inner-soft": "var(--shadow-inset)",
+        // Keep defaults for backwards compatibility
         sm: "0 1px 2px 0 rgb(0 0 0 / 0.05)",
         DEFAULT: "0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)",
         md: "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
         lg: "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
         xl: "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
+      },
+      fontFamily: {
+        heading: "var(--font-heading), Inter, system-ui, sans-serif",
+        body: "var(--font-body), system-ui, sans-serif",
+        mono: "var(--font-mono), ui-monospace, monospace",
       },
     },
   },

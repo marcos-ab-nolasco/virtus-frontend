@@ -2,6 +2,7 @@ import { authenticatedClient } from "@/lib/api-client";
 import type { components } from "@/types/api";
 
 type AdminUserList = components["schemas"]["AdminUserList"];
+type AdminUserOnboardingResponse = components["schemas"]["AdminUserOnboardingResponse"];
 type UserRead = components["schemas"]["UserRead"];
 
 interface PaginationParams {
@@ -123,4 +124,44 @@ export async function deleteUser(userId: string): Promise<void> {
     const message = extractErrorMessage(error, "Falha ao remover usuario.");
     throw attachStatus(new Error(message), response);
   }
+}
+
+export async function getUserOnboarding(userId: string): Promise<AdminUserOnboardingResponse> {
+  const { data, error, response } = await authenticatedClient.GET(
+    "/admin/users/{user_id}/onboarding",
+    {
+      params: {
+        path: {
+          user_id: userId,
+        },
+      },
+    }
+  );
+
+  if (error) {
+    const message = extractErrorMessage(error, "Falha ao carregar onboarding.");
+    throw attachStatus(new Error(message), response);
+  }
+
+  return data;
+}
+
+export async function resetUserOnboarding(userId: string): Promise<AdminUserOnboardingResponse> {
+  const { data, error, response } = await authenticatedClient.POST(
+    "/admin/users/{user_id}/onboarding/reset",
+    {
+      params: {
+        path: {
+          user_id: userId,
+        },
+      },
+    }
+  );
+
+  if (error) {
+    const message = extractErrorMessage(error, "Falha ao resetar onboarding.");
+    throw attachStatus(new Error(message), response);
+  }
+
+  return data;
 }

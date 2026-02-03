@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
@@ -14,6 +14,7 @@ interface MainLayoutProps {
 
 export default function MainLayout({ children, showSidebar = true }: MainLayoutProps) {
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const { user, logout } = useAuth();
   const router = useRouter();
 
@@ -26,13 +27,28 @@ export default function MainLayout({ children, showSidebar = true }: MainLayoutP
     setIsMobileSidebarOpen(!isMobileSidebarOpen);
   };
 
+  const toggleSidebarCollapse = () => {
+    setIsSidebarCollapsed((prev) => {
+      const next = !prev;
+      localStorage.setItem("sidebar-collapsed", String(next));
+      return next;
+    });
+  };
+
+  useEffect(() => {
+    const stored = localStorage.getItem("sidebar-collapsed");
+    if (stored === "true") {
+      setIsSidebarCollapsed(true);
+    }
+  }, []);
+
   // If no user, don't render layout (redirect should happen in page)
   if (!user) {
     return <>{children}</>;
   }
 
   return (
-    <div className="min-h-screen bg-neutral-50">
+    <div className="min-h-screen bg-background">
       {/* Header */}
       <Header
         user={user}
@@ -44,7 +60,7 @@ export default function MainLayout({ children, showSidebar = true }: MainLayoutP
         {/* Sidebar - Desktop */}
         {showSidebar && (
           <aside className="hidden lg:block">
-            <Sidebar />
+            <Sidebar collapsed={isSidebarCollapsed} onToggleCollapse={toggleSidebarCollapse} />
           </aside>
         )}
 
@@ -52,7 +68,7 @@ export default function MainLayout({ children, showSidebar = true }: MainLayoutP
         {showSidebar && isMobileSidebarOpen && (
           <>
             <div
-              className="lg:hidden fixed inset-0 bg-neutral-900 bg-opacity-50 z-30"
+              className="lg:hidden fixed inset-0 bg-navy-900 bg-opacity-50 z-30"
               onClick={() => setIsMobileSidebarOpen(false)}
               aria-hidden="true"
             />

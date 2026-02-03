@@ -1,15 +1,17 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useOnboardingChat } from "@/hooks/useOnboardingChat";
 import { ProgressIndicator } from "./ProgressIndicator";
 import { OnboardingMessageList } from "./OnboardingMessageList";
 import { OnboardingComplete } from "./OnboardingComplete";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
+import { useAuth } from "@/hooks/useAuth";
 
 export function OnboardingPage() {
   const router = useRouter();
+  const { refreshOnboardingStatus } = useAuth();
   const {
     messages,
     status,
@@ -30,6 +32,7 @@ export function OnboardingPage() {
   const [initializing, setInitializing] = useState(true);
   const [isRedirecting, setIsRedirecting] = useState(false);
   const [initError, setInitError] = useState<string | null>(null);
+  const hasStartedRef = useRef(false);
 
   // Initialize onboarding
   useEffect(() => {
@@ -39,10 +42,13 @@ export function OnboardingPage() {
       try {
         const response = await getStatus();
         if (response.status === "COMPLETED") {
+          await refreshOnboardingStatus().catch(() => undefined);
           setIsRedirecting(true);
-          router.replace("/home");
+          router.replace("/dashboard");
           return;
         }
+
+        await refreshOnboardingStatus().catch(() => undefined);
       } catch (err) {
         if (mounted) {
           const message = err instanceof Error ? err.message : "Erro ao carregar onboarding";
@@ -61,13 +67,16 @@ export function OnboardingPage() {
     return () => {
       mounted = false;
     };
-  }, [getStatus, router]);
+  }, [getStatus, refreshOnboardingStatus, router]);
 
   // Start or resume onboarding when status is NOT_STARTED or IN_PROGRESS
   useEffect(() => {
-    if (!initializing && !initError && (status === "NOT_STARTED" || status === "IN_PROGRESS")) {
-      startOnboarding();
-    }
+    if (initializing || initError) return;
+    if (status !== "NOT_STARTED" && status !== "IN_PROGRESS") return;
+    if (hasStartedRef.current) return;
+
+    hasStartedRef.current = true;
+    void startOnboarding();
   }, [initializing, status, initError, startOnboarding]);
 
   // Show completion screen when done

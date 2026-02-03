@@ -1,15 +1,25 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
+import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
+import ThemeSync from "@/components/ui/ThemeSync";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-heading",
+  weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const inter = Inter({
+  variable: "--font-body",
+  weight: ["400", "500", "600"],
+  subsets: ["latin"],
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-mono",
+  weight: ["400", "500"],
   subsets: ["latin"],
 });
 
@@ -25,7 +35,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body
+        className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable} font-body antialiased`}
+      >
+        <Script id="theme-init" strategy="beforeInteractive">
+          {`(function(){try{var t=localStorage.getItem("theme");var r=document.documentElement;var m=window.matchMedia("(prefers-color-scheme: dark)");var d=(t==="dark")||(t!=="light"&&m.matches);if(d){r.classList.add("dark")}else{r.classList.remove("dark")}}catch(e){}})();`}
+        </Script>
+        <ThemeSync />
         <ErrorBoundary>{children}</ErrorBoundary>
       </body>
     </html>

@@ -36,25 +36,25 @@ describe("Button", () => {
   it("applies primary variant styles", () => {
     render(<Button variant="primary">Primary</Button>);
     const button = screen.getByRole("button");
-    expect(button).toHaveClass("bg-primary-500");
+    expect(button).toHaveClass("bg-slate-500");
   });
 
   it("applies secondary variant styles", () => {
     render(<Button variant="secondary">Secondary</Button>);
     const button = screen.getByRole("button");
-    expect(button).toHaveClass("border-primary-500");
+    expect(button).toHaveClass("border-slate-500");
   });
 
   it("applies ghost variant styles", () => {
     render(<Button variant="ghost">Ghost</Button>);
     const button = screen.getByRole("button");
-    expect(button).toHaveClass("text-primary-700");
+    expect(button).toHaveClass("text-slate-500");
   });
 
   it("applies danger variant styles", () => {
     render(<Button variant="danger">Danger</Button>);
     const button = screen.getByRole("button");
-    expect(button).toHaveClass("bg-error-500");
+    expect(button).toHaveClass("bg-teal-500");
   });
 
   it("applies small size styles", () => {

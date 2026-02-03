@@ -29,13 +29,13 @@ describe("Card", () => {
   it("applies shadow when shadow prop is true", () => {
     render(<Card shadow>Shadowed card</Card>);
     const card = screen.getByText(/shadowed card/i);
-    expect(card).toHaveClass("shadow-md");
+    expect(card).toHaveClass("shadow-soft");
   });
 
   it("does not apply shadow when shadow prop is false", () => {
     render(<Card shadow={false}>No shadow</Card>);
     const card = screen.getByText(/no shadow/i);
-    expect(card).not.toHaveClass("shadow-md");
+    expect(card).not.toHaveClass("shadow-soft");
   });
 
   it("applies custom className", () => {
